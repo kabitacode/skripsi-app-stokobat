@@ -1,3 +1,8 @@
 import { Sequelize } from "sequelize";
 
-const db = {}
+const db = new Sequelize('obat_db', 'root', '', {
+    host: 'localhost',
+    dialect: 'mysql'
+});
+
+export default db
