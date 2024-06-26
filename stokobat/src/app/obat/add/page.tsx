@@ -25,10 +25,10 @@ export default function Page() {
     const onFinish: FormProps<FieldType>['onFinish'] = async (values: any) => {
 
         setLoading(true);
-        console.log('date:',tanggal);
-        
+        console.log('date:', tanggal);
+
         console.log(namaObat, stok, harga);
-        
+
 
         try {
             const response = await fetch('/api/your-endpoint', {
@@ -86,52 +86,52 @@ export default function Page() {
                 </div>
             </div>
 
-            <Form
-                name="basic"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                style={{ maxWidth: 600, marginLeft: 15 }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-                layout='vertical'
-            >
-                <Form.Item<FieldType>
-                    label="Nama Obat"
-                    name={'namaObat'}
-                    rules={[{ required: true, message: 'Please input your Nama Obat!' }]}
+            <div className='w-full max-w-md mx-auto bg-white p-8 rounded-md shadow-md'>
+                <Form
+                    name="basic"
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                    layout='vertical'
                 >
-                    <Input value={namaObat} onChange={(e) => setNamaObat(e.target.value)} />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Stok"
-                    name="stok"
-                    rules={[{ required: true, message: 'Please input your Stok!' }]}
-                >
-                    <InputNumber value={stok} onChange={onStok} />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Harga"
-                    name="harga"
-                    rules={[{ required: true, message: 'Please input your Harga!' }]}
-                >
-                    <InputNumber value={harga} onChange={onHarga} />
-                </Form.Item>
-                <Form.Item<FieldType>
-                    label="Tanggal Kadaluarsa"
-                    name="tanggal"
-                    rules={[{ required: true, message: 'Please input your Tanggal!' }]}
-                >
-                    <DatePicker value={tanggal} onChange={onTanggal} />
-                </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Nama Obat"
+                        name={'namaObat'}
+                        rules={[{ required: true, message: 'Please input your Nama Obat!' }]}
+                    >
+                        <Input value={namaObat} onChange={(e) => setNamaObat(e.target.value)} />
+                    </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Stok"
+                        name="stok"
+                        rules={[{ required: true, message: 'Please input your Stok!' }]}
+                    >
+                        <InputNumber value={stok} onChange={onStok} style={{ width: '100%' }}/>
+                    </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Harga"
+                        name="harga"
+                        rules={[{ required: true, message: 'Please input your Harga!' }]}
+                    >
+                        <InputNumber value={harga} onChange={onHarga} style={{ width: '100%' }}/>
+                    </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Tanggal Kadaluarsa"
+                        name="tanggal"
+                        rules={[{ required: true, message: 'Please input your Tanggal!' }]}
+                    >
+                        <DatePicker value={tanggal} onChange={onTanggal} style={{ width: '100%' }}/>
+                    </Form.Item>
 
 
-                <Form.Item>
-                    <Button type="primary" htmlType="submit" loading={loading}>
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={loading} style={{ width: '100%' }}>
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
+
         </DashboardLayout>
     );
 }

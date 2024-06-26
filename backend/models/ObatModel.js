@@ -1,11 +1,9 @@
 import { Sequelize } from "sequelize";
-import db from "../config/database";
+import db from "../config/database.js";
+import Kategori from './KategoriModel.js';
+import User from './UserModel.js';
 
-//Model
-import KategoriModel from './KategoriModel';
-import UserModel from './UserModel';
-
-const {DataTypes} = Sequelize;
+const { DataTypes } = Sequelize;
 
 const Obat = db.define('obat', {
     id: {
@@ -46,37 +44,28 @@ const Obat = db.define('obat', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'users', // 'users' refers to table name
-            key: 'uuid' // 'users' refers to table name
+            model: 'users',
+            key: 'id'
         }
     },
     id_kategori: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'kategori', // 'kategori' refers to table name
-          key: 'uuid' // 'uuid' refers to column name in kategori table
+            model: 'kategori',
+            key: 'id'
         }
     },
-} , {
+}, {
     freezeTableName: true,
     timestamps: true
 });
 
-//Kategori Foreign Key
-KategoriModel.hasMany(Obat, {
-    foreignKey: 'id_kategori',
-});
-Obat.belongsTo(KategoriModel, {
-    foreignKey: 'id_kategori'
-});
+// Relasi dengan Kategori dan User
+Kategori.hasMany(Obat, { foreignKey: 'id_kategori' });
+Obat.belongsTo(Kategori, { foreignKey: 'id_kategori' });
 
-//User Foreign Key
-UserModel.hasMany(Obat, {
-    foreignKey: 'user_id'
-});
-Obat.belongsTo(UserModel, {
-    foreignKey: 'user_id'
-});
+User.hasMany(Obat, { foreignKey: 'user_id' });
+Obat.belongsTo(User, { foreignKey: 'user_id' });
 
 export default Obat;

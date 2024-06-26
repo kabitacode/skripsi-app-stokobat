@@ -1,10 +1,8 @@
 import { Sequelize } from "sequelize";
-import db from "../config/database";
+import db from "../config/database.js";
+import ObatModel from "./ObatModel.js";
 
-//Model
-import ObatModel from "./ObatModel";
-
-const {DataTypes} = Sequelize;
+const { DataTypes } = Sequelize;
 
 const Penjualan = db.define('transaksi_penjualan', {
     id: {
@@ -38,20 +36,18 @@ const Penjualan = db.define('transaksi_penjualan', {
         allowNull: false,
         references: {
             model: 'obat',
-            key: 'uuid'
-        }
+            key: 'id'
+        },
+          onDelete: 'CASCADE', // Aksi CASCADE saat menghapus Obat akan menghapus semua Penjualan terkait
+        onUpdate: 'CASCADE'
     },
-} , {
+}, {
     freezeTableName: true,
     timestamps: true
 });
 
-//Obat Foreign Key
-ObatModel.hasMany(ObatModel, {
-    foreignKey: 'id_obat',
-});
-ObatModel.belongsTo(ObatModel, {
-    foreignKey: 'id_obat'
-});
+// Relasi dengan Obat
+ObatModel.hasMany(Penjualan, { foreignKey: 'id_obat', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+Penjualan.belongsTo(ObatModel, { foreignKey: 'id_obat', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
 
 export default Penjualan;
