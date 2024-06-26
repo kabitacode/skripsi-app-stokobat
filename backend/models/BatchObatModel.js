@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
-import Obat from "./ObatModel";  
+import ObatModel from "./ObatModel.js";  
 
 const { DataTypes } = Sequelize;
 
-const BatchObat = db.define('batch_obat', {
+const BatchObatModel = db.define('batch_obat', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -53,7 +53,7 @@ const BatchObat = db.define('batch_obat', {
 });
 
 // Relasi dengan Obat
-Obat.hasMany(BatchObat, { foreignKey: 'id_obat' });
-BatchObat.belongsTo(Obat, { foreignKey: 'id_obat' });
+ObatModel.hasMany(BatchObatModel, { foreignKey: 'id_obat' });
+BatchObatModel.belongsTo(ObatModel, { foreignKey: 'id_obat' });
 
-export default BatchObat;
+export default BatchObatModel;

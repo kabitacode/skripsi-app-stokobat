@@ -1,11 +1,11 @@
 import { Sequelize } from "sequelize";
 import db from "../config/database.js";
-import Kategori from './KategoriModel.js';
-import User from './UserModel.js';
+import KategoriModel from './KategoriModel.js';
+import UserModel from './UserModel.js';
 
 const { DataTypes } = Sequelize;
 
-const Obat = db.define('obat', {
+const ObatModel = db.define('obat', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -62,10 +62,10 @@ const Obat = db.define('obat', {
 });
 
 // Relasi dengan Kategori dan User
-Kategori.hasMany(Obat, { foreignKey: 'id_kategori' });
-Obat.belongsTo(Kategori, { foreignKey: 'id_kategori' });
+KategoriModel.hasMany(ObatModel, { foreignKey: 'id_kategori' });
+ObatModel.belongsTo(KategoriModel, { foreignKey: 'id_kategori' });
 
-User.hasMany(Obat, { foreignKey: 'user_id' });
-Obat.belongsTo(User, { foreignKey: 'user_id' });
+UserModel.hasMany(ObatModel, { foreignKey: 'user_id' });
+ObatModel.belongsTo(UserModel, { foreignKey: 'user_id' });
 
-export default Obat;
+export default ObatModel;

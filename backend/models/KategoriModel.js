@@ -3,7 +3,7 @@ import db from "../config/database.js";
 
 const {DataTypes} = Sequelize;
 
-const Kategori = db.define('kategori', {
+const KategoriModel = db.define('kategori', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -22,4 +22,4 @@ const Kategori = db.define('kategori', {
     timestamps: true
 });
 
-export default Kategori;
+export default KategoriModel;

@@ -1,9 +1,11 @@
-import User from '../models/UserModel.js';
+import UserModel from '../models/UserModel.js';
 import argon2 from 'argon2'
 
 export const getUser = async (req, res) => {
     try {
-        const response = await User.findAll();
+        const response = await UserModel.findAll({
+            attributes: ['id', 'name', 'email', 'role']
+        });
         res.status(200).json(response);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -12,7 +14,8 @@ export const getUser = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        const response = await User.findOne({
+        const response = await UserModel.findOne({
+            attributes: ['id', 'name', 'email', 'role'],
             where: {
                 id: req.params.id
             }
@@ -31,7 +34,7 @@ export const createUser = async (req, res) => {
 
     const hasPassword = await argon2.hash(password);
     try {
-        await User.create({
+        await UserModel.create({
             name: name,
             email: email,
             password: hasPassword,
@@ -44,7 +47,7 @@ export const createUser = async (req, res) => {
 }
 
 export const updateUser = async(req, res) => {
-    const user = await User.findOne({
+    const user = await UserModel.findOne({
         where: {
             id: req.params.id
         }
@@ -64,7 +67,7 @@ export const updateUser = async(req, res) => {
     }
 
     try {
-        await User.update({
+        await UserModel.update({
             name: name,
             email: email,
             password: hashPassword,
@@ -81,7 +84,7 @@ export const updateUser = async(req, res) => {
 }
 
 export const deleteUser = async(req, res) => {
-    const user = await User.findOne({
+    const user = await UserModel.findOne({
         where: {
             id: req.params.id
         }
@@ -90,7 +93,7 @@ export const deleteUser = async(req, res) => {
     if(!user) return res.status(404).json({message: "User Tidak Ditemukan!"});
   
     try {
-        await User.destroy({
+        await UserModel.destroy({
             where: {
                 id: user.id
             }

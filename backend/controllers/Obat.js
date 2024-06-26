@@ -1,4 +1,4 @@
-import Obat from '../models/ObatModel.js';
+import ObatModel from '../models/ObatModel.js';
 
 export const getObat = (req, res) => {
 

@@ -3,7 +3,7 @@ import db from "../config/database.js";
 
 const {DataTypes} = Sequelize;
 
-const Users = db.define('users', {
+const UserModel = db.define('users', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -44,4 +44,4 @@ const Users = db.define('users', {
     timestamps: true
 });
 
-export default Users;
+export default UserModel;
