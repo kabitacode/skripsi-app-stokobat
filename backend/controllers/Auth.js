@@ -14,7 +14,6 @@ export const logIn = async (req, res) => {
         return res.status(400).json({ message: "Password Salah!" });
     }
     req.session.user_id = user.id;
-    console.log('Session after login:', req.session);
 
     const id = user.id;
     const name = user.name;
@@ -25,7 +24,6 @@ export const logIn = async (req, res) => {
 }
 
 export const Me = async (req, res) => {
-    console.log('session:',req.session);
     if (!req.session.user_id) {
         return res.status(401).json({ message: "Mohon Login Ke Akun Anda!" });
     }
@@ -35,7 +33,6 @@ export const Me = async (req, res) => {
             id: req.session.user_id
         }
     });
-    console.log('user:', user);
     if (!user) return res.status(404).json({ message: "User tidak ditemukan!" });
     res.status(200).json(user);
 }

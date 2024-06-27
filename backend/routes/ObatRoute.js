@@ -7,13 +7,14 @@ import {
     updateObat,
     deleteObat
 } from '../controllers/Obat.js';
+import {verifyUser} from '../middleware/AuthUser.js'
 
 const router = express.Router();
 
-router.get('/obat', getObat);
-router.get('/obat/:id', getObatById);
-router.post('/obat', createObat);
-router.patch('/obat/:id', updateObat);
-router.delete('/obat/:id', deleteObat);
+router.get('/obat', verifyUser, getObat);
+router.get('/obat/:id', verifyUser, getObatById);
+router.post('/obat', verifyUser, createObat);
+router.patch('/obat/:id', verifyUser, updateObat);
+router.delete('/obat/:id', verifyUser, deleteObat);
 
 export default router;

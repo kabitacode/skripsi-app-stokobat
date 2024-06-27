@@ -4,9 +4,12 @@ import session from 'express-session';
 import dotenv from 'dotenv';
 import SequelizeStore from 'connect-session-sequelize';
 import db from './config/database.js';
+
+//Route
 import UserRoute from './routes/UserRoute.js';
 import ObatRoute from './routes/ObatRoute.js';
 import AuthRoute from './routes/AuthRoute.js';
+import KategoriRoute from './routes/KategoriRoute.js';
 
 
 dotenv.config();
@@ -36,7 +39,9 @@ app.use(session({
     saveUninitialized: true,
     store: store,
     cookie: {
-        secure: 'auto'
+        secure: 'auto',
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
     }
 }));
 
@@ -44,11 +49,14 @@ app.use(cors({
     credentials: true,
     origin: 'http://localhost:3000'
 }));
+app.use(express.urlencoded({ extended: true }));
+
 
 app.use(express.json());
 app.use(UserRoute);
-app.use(ObatRoute);
 app.use(AuthRoute);
+app.use(ObatRoute);
+app.use(KategoriRoute);
 
 store.sync();
 
