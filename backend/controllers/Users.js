@@ -6,9 +6,13 @@ export const getUser = async (req, res) => {
         const response = await UserModel.findAll({
             attributes: ['id', 'name', 'email', 'role']
         });
-        res.status(200).json(response);
+        res.status(200).json({
+            status: 200,
+            message: "success",
+            data: response
+        });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -20,9 +24,13 @@ export const getUserById = async (req, res) => {
                 id: req.params.id
             }
         });
-        res.status(200).json(response);
+        res.status(200).json({
+            status: 200,
+            message: "success",
+            data: response
+        });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -40,9 +48,12 @@ export const createUser = async (req, res) => {
             password: hasPassword,
             role: role
         });
-        res.status(200).json({ message: "Success" });
+        res.status(200).json({
+            status: 200,
+            message: "User created successfully"
+        });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -77,7 +88,10 @@ export const updateUser = async(req, res) => {
                 id: user.id
             }
         });
-        res.status(200).json({ message: "Success Updated" });
+        res.status(200).json({
+            status: 200,
+            message: "User updated successfully"
+        });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -98,7 +112,10 @@ export const deleteUser = async(req, res) => {
                 id: user.id
             }
         });
-        res.status(200).json({ message: "Success Deleted" });
+        res.status(200).json({
+            status: 200,
+            message: "User deleted successfully"
+        });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

@@ -18,20 +18,6 @@ const BatchObatModel = db.define('batch_obat', {
             len: [3, 100]
         }
     },
-    jumlah: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-            notEmpty: true,
-        }
-    },
-    tanggal_kadaluarsa: {
-        type: DataTypes.DATEONLY,
-        allowNull: false,
-        validate: {
-            notEmpty: true,
-        }
-    },
     tanggal_produksi: {
         type: DataTypes.DATEONLY,
         allowNull: false,
@@ -49,7 +35,21 @@ const BatchObatModel = db.define('batch_obat', {
     },
 }, {
     freezeTableName: true,
-    timestamps: true
+    timestamps: true,
+});
+
+BatchObatModel.beforeSave(async (batchObat, options) => {
+    const obat = await ObatModel.findByPk(batchObat.id_obat);
+    if (!obat) {
+        throw new Error('Obat tidak ditemukan.');
+    }
+
+    // Bandingkan tanggal_produksi batch dengan tanggal_kadaluarsa obat
+    if (batchObat.tanggal_produksi > obat.tanggal_kadaluarsa) {
+        batchObat.status_kadaluarsa = 'Kadaluarsa';
+    } else {
+        batchObat.status_kadaluarsa = 'Tidak Kadaluarsa';
+    }
 });
 
 // Relasi dengan Obat

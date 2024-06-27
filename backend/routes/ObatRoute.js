@@ -5,7 +5,8 @@ import {
     getObatById,
     createObat,
     updateObat,
-    deleteObat
+    deleteObat,
+    searchObat
 } from '../controllers/Obat.js';
 import {verifyUser} from '../middleware/AuthUser.js'
 
@@ -16,5 +17,6 @@ router.get('/obat/:id', verifyUser, getObatById);
 router.post('/obat', verifyUser, createObat);
 router.patch('/obat/:id', verifyUser, updateObat);
 router.delete('/obat/:id', verifyUser, deleteObat);
+
 
 export default router;

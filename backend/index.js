@@ -10,6 +10,7 @@ import UserRoute from './routes/UserRoute.js';
 import ObatRoute from './routes/ObatRoute.js';
 import AuthRoute from './routes/AuthRoute.js';
 import KategoriRoute from './routes/KategoriRoute.js';
+import BatchRoute from './routes/BatchRoute.js';
 
 
 dotenv.config();
@@ -22,16 +23,16 @@ const store = new sessionStore({
     db: db
 });
 
-// (async () => {
-//     try {
-//         // Sinkronkan semua model
-//         await db.sync(); // Gunakan { force: true } hanya saat pengembangan
-//         console.log('All models were synchronized successfully.');   
+(async () => {
+    try {
+        // Sinkronkan semua model
+        await db.sync(); // Gunakan { force: true } hanya saat pengembangan
+        console.log('All models were synchronized successfully.');   
 
-//     } catch (error) {
-//         console.error('Unable to connect to the database:', error);
-//     }
-// })();
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+})();
 
 app.use(session({
     secret: process.env.SESS_SECRET,
@@ -53,10 +54,11 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use(express.json());
-app.use(UserRoute);
 app.use(AuthRoute);
+app.use(UserRoute);
 app.use(ObatRoute);
 app.use(KategoriRoute);
+app.use(BatchRoute);
 
 store.sync();
 

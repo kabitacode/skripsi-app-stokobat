@@ -10,7 +10,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:5000/login
+POST http://localhost:5001/login
 Content-Type: application/json
 
 {
@@ -60,21 +60,67 @@ Content-Type: application/json
 
 
 ###
-GET  http://localhost:5000/obat
+GET  http://localhost:5001/obat
 Content-Type: application/json
 
 ###
-GET  http://localhost:5000/obat/1
+GET  http://localhost:5001/obat/3
 Content-Type: application/json
 
 ###
-POST http://localhost:5000/obat
+POST http://localhost:5001/obat
 Content-Type: application/json
 
 {
-    "nama_obat": "Paramex",
-    "stok": 1,
-    "harga": 2000,
+    "nama_obat": "Antikolinergik",
+    "stok": 7,
+    "harga": 15000,
     "tanggal_kadaluarsa": "2024-05-10",
     "id_kategori": 8
 }
+
+###
+PATCH  http://localhost:5001/obat/3
+Content-Type: application/json
+
+{
+    "nama_obat": "Obat Paramex",
+    "stok": 5,
+    "harga": 3000,
+    "tanggal_kadaluarsa": "2024-05-10",
+    "id_kategori": 8
+}
+
+###
+DELETE   http://localhost:5001/obat/5
+Content-Type: application/json
+
+
+###
+GET  http://localhost:5001/batch
+Content-Type: application/json
+
+###
+GET  http://localhost:5001/batch/7
+Content-Type: application/json
+
+###
+POST http://localhost:5001/batch
+Content-Type: application/json
+
+{
+    "batches": [
+        {
+            "tanggal_produksi": "2024-07-01",
+            "id_obat": 3
+        },
+        {
+            "tanggal_produksi": "2024-04-02",
+            "id_obat": 4
+        }
+    ]
+}
+
+###
+DELETE   http://localhost:5001/batch/12
+Content-Type: application/json
