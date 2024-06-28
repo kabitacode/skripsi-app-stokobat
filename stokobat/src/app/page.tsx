@@ -1,62 +1,81 @@
 'use client';
+
+import React, { useState } from "react";
+import { AccountCircle } from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { login } from '@/services/api'
+import useStore, {User} from '@/store/useStore'
+import { Alert, AlertTitle, CircularProgress } from "@mui/material";
 
-export default function Login() {
-  const { push } = useRouter();
-  function handleClick() {
-      push('/dashboard')
-  }
-  
+
+
+const Page: React.FC = () => {
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { setUser } = useStore();
+
+  const handleLogin = async (data: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const userData: User = await login(data.email, data.password);
+      setUser(userData);
+      router.push('/dashboard');
+    } catch (error: any) {
+      setError(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="container mx-auto py-8">
-      <form className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-md">
-        <h1 className="text-center font-bold mb-3">COMPANY NAME</h1>
-        <h2 className="text-md mb-6 text-center text-gray-400">Login</h2>
+      {
+        error && <div className="mb-10 flex items-center justify-center">
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {error}
+          </Alert>
+        </div>
+      }
+      <form onSubmit={handleSubmit(handleLogin)} className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-md">
+        <div className="flex items-center justify-center mb-10">
+          <AccountCircle sx={{ fontSize: 70 }} />
+        </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2"  htmlFor="email">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
             Email
           </label>
           <input
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             type="email"
-            id="email"
-            name="email"
             placeholder="john@example.com"
+            {...register('email', { required: true })}
           />
+          {errors.email && <p className="mt-3 text-sm text-red-500">Email is required</p>}
         </div>
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-             htmlFor="password"
+            htmlFor="password"
           >
             Password
           </label>
           <input
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             type="password"
-            id="password"
-            name="password"
             placeholder="********"
+            {...register('password', { required: true })}
           />
+          {errors.password && <p className="mt-3 text-sm text-red-500">Password is required</p>}
         </div>
         <div className="flex items-center justify-between my-5">
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="remember"
-                aria-describedby="remember"
-                type="checkbox"
-                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                required=""
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label  htmlFor="remember" className="text-gray-500 dark:text-gray-300">
-                Remember me
-              </label>
-            </div>
-          </div>
+          <div></div>
           <Link
             href="/forgot-password"
             className="text-blue-500 text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
@@ -66,10 +85,9 @@ export default function Login() {
         </div>
         <button
           className="w-full bg-blue-700 text-white text-sm font-bold py-3 px-4 rounded-md hover:bg-blue-700 transition duration-300"
-          type="button"
-          onClick={handleClick}
+          type="submit"
         >
-          Login
+          {loading ? <CircularProgress size={24} /> : 'Login'}
         </button>
         <p className="my-3 text-sm font-light text-gray-500 dark:text-gray-400">
           Don&apos;t have an account?{" "}
@@ -84,3 +102,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default Page;

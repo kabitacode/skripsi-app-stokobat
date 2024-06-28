@@ -1,12 +1,16 @@
 'user client';
+import { AccountCircle } from "@mui/icons-material";
 import Link from "next/link";
 
 export default function Register() {
-   
+
+
   return (
     <div className="container mx-auto py-8">
       <form className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-md">
-        <h1 className="text-center font-bold mb-3">COMPANY NAME</h1>
+      <div className="flex items-center justify-center mb-2">
+          <AccountCircle sx={{ fontSize: 70 }}/>
+        </div>
         <h2 className="text-md mb-6 text-center text-gray-400">Registration</h2>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2"  htmlFor="name">
@@ -72,7 +76,7 @@ export default function Register() {
         <p className="my-3 text-sm font-light text-gray-500 dark:text-gray-400">
           Already have an account?{" "}
           <Link
-            href="/login"
+            href="/"
             className="text-blue-500 font-medium text-primary-600 hover:underline dark:text-primary-500"
           >
             Login

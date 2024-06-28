@@ -11,10 +11,10 @@ import { verifyUser } from "../middleware/AuthUser.js";
 
 const router = express.Router();
 
-router.get('/kategori', verifyUser, getKategori);
-router.get('/kategori/:id', verifyUser, getKategoriById);
-router.post('/kategori', verifyUser, createKategori);
-router.patch('/kategori/:id', verifyUser, updateKategori);
-router.delete('/kategori/:id', verifyUser, deleteKategori);
+router.get('api/kategori', verifyUser, getKategori);
+router.get('api/kategori/:id', verifyUser, getKategoriById);
+router.post('api/kategori', verifyUser, createKategori);
+router.patch('api/kategori/:id', verifyUser, updateKategori);
+router.delete('api/kategori/:id', verifyUser, deleteKategori);
 
 export default router;

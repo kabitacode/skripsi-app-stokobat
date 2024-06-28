@@ -1,15 +1,34 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
-import { DownOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Dropdown, message, Space } from 'antd';
-
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { styled, alpha } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Menu, { MenuProps } from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import { Alert, AlertTitle, IconButton } from '@mui/material';
+import { AccountBox, Logout } from '@mui/icons-material';
+import { StyledMenu } from '@/components';
+import { logout } from '@/services/api';
+import useStore from '@/store/useStore'
 
 export default function DashboardLayout({ children }: any) {
+   const { user, clearUser } = useStore();
+   const router = useRouter();
+
    const [activeLink, setActiveLink] = useState('');
+   const [error, setError] = useState<string | null>(null);
+   const [loading, setLoading] = useState(false);
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+   const open = Boolean(anchorEl);
+   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+   };
+   const handleClose = () => {
+      setAnchorEl(null);
+   };
 
    const pathname = usePathname();
 
@@ -19,24 +38,27 @@ export default function DashboardLayout({ children }: any) {
 
    }, [pathname]);
 
-   const onClick: MenuProps['onClick'] = ({ key }) => {
-      message.info(`Click on item ${key}`);
-   };
-
-   const items: MenuProps['items'] = [
-      {
-         label: 'Settings',
-         key: '1',
-      },
-      {
-         label: 'Logout',
-         key: '2',
-      },
-   ];
 
    const toggleSidebar = () => {
       setIsSidebarOpen(!isSidebarOpen);
    };
+
+   const { push } = useRouter();
+   function handleLink() {
+      push('/user')
+   }
+
+   const handleLogout = async () => {
+      try {
+         await logout();
+         clearUser();
+         router.push('/');
+      } catch (error: any) {
+         setError(error.response?.data?.message || error.message);
+       } finally {
+         setLoading(false);
+       }
+   }
 
    return (
       <div>
@@ -55,18 +77,31 @@ export default function DashboardLayout({ children }: any) {
                         <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">StokObat</span>
                      </Link>
                   </div>
-                  <div className="flex items-center">
-                     <div className="flex items-center ml-3">
-                        <Dropdown menu={{ items, onClick }}>
-                           <a onClick={(e) => e.preventDefault()}>
-                              <Space>
-                                 <img className="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
-                                 <DownOutlined />
-                              </Space>
-                           </a>
-                        </Dropdown>
-                     </div>
-                  </div>
+                  <IconButton
+                     id="demo-customized-button"
+                     onClick={handleClick}>
+                     <AccountCircle />
+                  </IconButton>
+
+
+                  <StyledMenu
+                     id="demo-customized-menu"
+                     MenuListProps={{
+                        'aria-labelledby': 'demo-customized-button',
+                     }}
+                     anchorEl={anchorEl}
+                     open={open}
+                     onClose={handleClose}
+                  >
+                     <MenuItem onClick={handleLink} disableRipple>
+                        <AccountBox />
+                        User
+                     </MenuItem>
+                     <MenuItem onClick={handleLogout} disableRipple>
+                        <Logout />
+                        Logout
+                     </MenuItem>
+                  </StyledMenu>
                </div>
             </div>
          </nav>
@@ -92,6 +127,14 @@ export default function DashboardLayout({ children }: any) {
             </div>
          </aside>
          <div className="p-2 sm:ml-64 mt-14">
+            {
+               error && <div className="mb-10 flex items-center justify-center">
+                  <Alert severity="error">
+                     <AlertTitle>Error</AlertTitle>
+                     {error}
+                  </Alert>
+               </div>
+            }
             {children}
          </div>
       </div>
