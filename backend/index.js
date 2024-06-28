@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import session from 'express-session';
 import dotenv from 'dotenv';
-import SequelizeStore from 'connect-session-sequelize';
 import db from './config/database.js';
 
 //Route
@@ -17,11 +15,6 @@ dotenv.config();
 
 const app = express();
 
-const sessionStore = SequelizeStore(session.Store);
-
-const store = new sessionStore({
-    db: db
-});
 
 // (async () => {
 //     try {
@@ -34,21 +27,10 @@ const store = new sessionStore({
 //     }
 // })();
 
-app.use(session({
-    secret: process.env.SESS_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    store: store,
-    cookie: {
-        secure: 'auto',
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
-    }
-}));
 
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3001'
+    origin: 'http://localhost:3000'
 }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -60,7 +42,7 @@ app.use(ObatRoute);
 app.use(KategoriRoute);
 app.use(BatchRoute);
 
-store.sync();
+
 
 app.listen(process.env.APP_PORT, () => {
     console.log(`Server running on port ${process.env.APP_PORT}`);

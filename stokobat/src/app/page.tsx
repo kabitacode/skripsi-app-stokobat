@@ -89,15 +89,6 @@ const Page: React.FC = () => {
         >
           {loading ? <CircularProgress size={24} /> : 'Login'}
         </button>
-        <p className="my-3 text-sm font-light text-gray-500 dark:text-gray-400">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            className="text-blue-500 font-medium text-primary-600 hover:underline dark:text-primary-500"
-          >
-            Register
-          </Link>
-        </p>
       </form>
     </div>
   );
