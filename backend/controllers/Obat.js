@@ -74,7 +74,7 @@ export const updateObat = async (req, res) => {
                 id: req.params.id
             }
         })
-        if (!user) return res.status(404).json({ message: "User tidak ditemukan!" });
+        if (!user) return res.status(404).json({ message: "Data tidak ditemukan!" });
 
         await ObatModel.update({
             nama_obat: nama_obat,

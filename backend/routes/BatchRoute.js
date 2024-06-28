@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/batch', getBatch);
 router.get('/batch/:id', getBatchById);
 router.post('/batch', createBatch);
-router.patch('/batch/:id', updateBatch);
+router.put('/batch', updateBatch);
 router.delete('/batch/:id', deleteBatch);
 
 

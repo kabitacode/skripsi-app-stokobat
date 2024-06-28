@@ -10,7 +10,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:5001/login
+POST http://localhost:5000/login
 Content-Type: application/json
 
 {
@@ -60,15 +60,15 @@ Content-Type: application/json
 
 
 ###
-GET  http://localhost:5001/obat
+GET  http://localhost:5000/obat
 Content-Type: application/json
 
 ###
-GET  http://localhost:5001/obat/3
+GET  http://localhost:5000/obat/3
 Content-Type: application/json
 
 ###
-POST http://localhost:5001/obat
+POST http://localhost:5000/obat
 Content-Type: application/json
 
 {
@@ -80,7 +80,7 @@ Content-Type: application/json
 }
 
 ###
-PATCH  http://localhost:5001/obat/3
+PATCH  http://localhost:5000/obat/3
 Content-Type: application/json
 
 {
@@ -92,20 +92,20 @@ Content-Type: application/json
 }
 
 ###
-DELETE   http://localhost:5001/obat/5
+DELETE   http://localhost:5000/obat/5
 Content-Type: application/json
 
 
 ###
-GET  http://localhost:5001/batch
+GET  http://localhost:5000/batch
 Content-Type: application/json
 
 ###
-GET  http://localhost:5001/batch/7
+GET  http://localhost:5000/batch/7
 Content-Type: application/json
 
 ###
-POST http://localhost:5001/batch
+POST http://localhost:5000/batch
 Content-Type: application/json
 
 {
@@ -124,3 +124,22 @@ Content-Type: application/json
 ###
 DELETE   http://localhost:5001/batch/12
 Content-Type: application/json
+
+###
+PUT   http://localhost:5000/batch
+Content-Type: application/json
+
+{
+    "batches": [
+        {
+            "id": 1,
+            "tanggal_produksi": "2024-08-01",
+            "id_obat": 4
+        },
+        {
+            "id": 2,
+            "tanggal_produksi": "2024-04-03",
+            "id_obat": 4
+        }
+    ]
+}

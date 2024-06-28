@@ -64,7 +64,7 @@ export const updateUser = async(req, res) => {
         }
     });
 
-    if(!user) return res.status(404).json({message: "User Tidak Ditemukan!"});
+    if(!user) return res.status(404).json({message: "Data Tidak Ditemukan!"});
     const { name, email, password, confPassword, role } = req.body;
     let hashPassword;
     if (password === "" || password === null) {

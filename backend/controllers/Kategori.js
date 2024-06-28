@@ -56,7 +56,7 @@ export const updateKategori = async (req, res) => {
             }
         });
 
-        if (!user) return res.status(404).json({ message: "User Tidak Ditemukan!" });
+        if (!user) return res.status(404).json({ message: "Data Tidak Ditemukan!" });
         await KategoriModel.update({
             nama: nama
         }, {

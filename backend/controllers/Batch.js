@@ -40,7 +40,6 @@ export const createBatch = async (req, res) => {
     const { batches } = req.body;
 
     try {
-        // Create batches in database
         const results = await Promise.all(batches.map(async batch => {
             const obat = await ObatModel.findByPk(batch.id_obat);
             if (!obat) {
@@ -69,32 +68,45 @@ export const createBatch = async (req, res) => {
 }
 
 export const updateBatch = async (req, res) => {
-    const {status_kadaluarsa, jumlah, tanggal_kadaluarsa, tanggal_produksi, id_obat} = req.body;
-    try {
-        const user = await BatchObatModel.findOne({
-            where: {
-                id: req.params.id
-            }
-        });
-        if (!user) return res.status(404).json({message: "Data tidak ditemukan!"});
+    const { batches } = req.body;
 
-        await BatchObatModel.update({
-            status_kadaluarsa: status_kadaluarsa,
-            jumlah: jumlah,
-            tanggal_kadaluarsa: tanggal_kadaluarsa,
-            tanggal_produksi: tanggal_produksi,
-            id_obat: id_obat
-        }, {
-            where: {
-                id: user.id
+    try {
+
+        const result = await Promise.all(batches.map(async batch => {
+            const existingBatch = await BatchObatModel.findOne({
+                where: {
+                    id: batch.id,
+                    id_obat: batch.id_obat
+                }
+            });
+
+            if (!existingBatch) {
+                throw new Error(`Batch obat dengan id ${batch.id} dan id_obat ${batch.id_obat} tidak ditemukan.`);
             }
-        });
+
+            const obat = await ObatModel.findByPk(batch.id_obat);
+            if (!obat) {
+                throw new Error(`Obat dengan id ${batch.id_obat} tidak ditemukan.`);
+            }
+
+            const status_kadaluarsa = batch.tanggal_produksi > obat.tanggal_kadaluarsa ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
+
+            // Update batch data
+            existingBatch.tanggal_produksi = batch.tanggal_produksi;
+            existingBatch.status_kadaluarsa = status_kadaluarsa;
+
+            await existingBatch.save();
+
+            return existingBatch;
+        }));
+
         res.status(200).json({
             status: 200,
-            message: "Batch Obat updated successfully",
-        }); 
+            message: "Batch obat updated successfully",
+            data: result
+        });
     } catch (error) {
-        res.status(500).json({message: error.message});
+        res.status(500).json({ message: error.message });
     }
 }
 
@@ -116,43 +128,6 @@ export const deleteBatch = async (req, res) => {
             status: 200,
             message: "Batch Obat deleted successfully"
         });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-export const getBatchInfo = async (req, res) => {
-    const { id_obat } = req.params;
-    console.log(id_obat);
-    try {
-        const batchObats = await BatchObatModel.findAll({
-            where: { id_obat: id_obat },
-            include: {
-                model: ObatModel,
-                attributes: ['id', 'nama_obat', 'stok', 'harga', 'tanggal_kadaluarsa'],
-            }
-        });
-
-        if (batchObats.length === 0) {
-            return res.status(404).json({ message: 'Batch Obat tidak ditemukan untuk obat ini.' });
-        }
-
-        const responseData = batchObats.map(batchObat => ({
-            id: batchObat.id,
-            status_kadaluarsa: batchObat.tanggal_produksi > batchObat.Obat.tanggal_kadaluarsa ? 'Kadaluarsa' : 'Tidak Kadaluarsa',
-            jumlah: batchObat.jumlah,
-            tanggal_produksi: batchObat.tanggal_produksi,
-            tanggal_kadaluarsa_obat: batchObat.Obat.tanggal_kadaluarsa,
-            obat: {
-                id: batchObat.Obat.id,
-                nama_obat: batchObat.Obat.nama_obat,
-                stok: batchObat.Obat.stok,
-                harga: batchObat.Obat.harga,
-                tanggal_kadaluarsa: batchObat.Obat.tanggal_kadaluarsa,
-            }
-        }));
-
-        res.status(200).json(responseData);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
