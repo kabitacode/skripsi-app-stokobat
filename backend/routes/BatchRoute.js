@@ -10,11 +10,11 @@ import {
 
 const router = express.Router();
 
-router.get('api/batch', getBatch);
-router.get('api/batch/:id', getBatchById);
-router.post('api/batch', createBatch);
-router.put('api/batch', updateBatch);
-router.delete('api/batch/:id', deleteBatch);
+router.get('/api/batch', getBatch);
+router.get('/api/batch/:id', getBatchById);
+router.post('/api/batch', createBatch);
+router.put('/api/batch', updateBatch);
+router.delete('/api/batch/:id', deleteBatch);
 
 
 export default router;
