@@ -14,21 +14,25 @@ POST http://localhost:5000/api/login
 Content-Type: application/json
 
 {
-  "email": "admin@mail.com",
-  "password": "123456"
+  "email": "apoteker@mail.com",
+  "password": "12345"
 }
 
-###
-GET  http://localhost:5000/me
-Content-Type: application/json
 
 ###
-GET  http://localhost:5000/users
+GET  http://localhost:5000/api/me
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImFwb3Rla2VyIiwiaWF0IjoxNzE5ODE4MjMyLCJleHAiOjE3MjA0MjMwMzJ9.5SEZ0Pr9mNa65SRXCJ0nrPsyqcU7KqTRxwmLJQ_tGK4
+
+###
+GET  http://localhost:5000/api/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImFwb3Rla2VyIiwiaWF0IjoxNzE5ODE4MjMyLCJleHAiOjE3MjA0MjMwMzJ9.5SEZ0Pr9mNa65SRXCJ0nrPsyqcU7KqTRxwmLJQ_tGK4
 
 ###
 DELETE   http://localhost:5000/api/logout
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6ImFwb3Rla2VyIiwiaWF0IjoxNzE5ODE4MjMyLCJleHAiOjE3MjA0MjMwMzJ9.5SEZ0Pr9mNa65SRXCJ0nrPsyqcU7KqTRxwmLJQ_tGK4
 
 ###
 GET  http://localhost:5000/kategori

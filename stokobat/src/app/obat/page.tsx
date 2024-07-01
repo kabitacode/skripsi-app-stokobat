@@ -7,11 +7,11 @@ import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
 import { Add } from "@mui/icons-material";
 import { CustomButton } from "@/components";
-import { fetchObat } from '@/services/api';
+import { fetchObat } from '@/services';
 
 
 
-export default function Page() {
+const Page: React.FC = () => {
     const [data, setData] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -63,3 +63,5 @@ export default function Page() {
         </DashboardLayout>
     )
 }
+
+export default Page;

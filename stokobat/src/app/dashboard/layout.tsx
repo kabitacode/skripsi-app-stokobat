@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
@@ -10,7 +11,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Alert, AlertTitle, IconButton } from '@mui/material';
 import { AccountBox, Logout } from '@mui/icons-material';
 import { StyledMenu } from '@/components';
-import { logout } from '@/services/api';
+import { logout } from '@/services';
 import useStore from '@/store/useStore'
 
 export default function DashboardLayout({ children }: any) {
