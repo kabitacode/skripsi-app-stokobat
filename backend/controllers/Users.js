@@ -19,7 +19,6 @@ export const getUser = async (req, res) => {
 export const getUserById = async (req, res) => {
     try {
         const response = await UserModel.findOne({
-            attributes: ['id', 'name', 'email', 'role'],
             where: {
                 id: req.params.id
             }
