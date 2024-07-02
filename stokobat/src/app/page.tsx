@@ -75,15 +75,6 @@ const Page: React.FC = () => {
           />
           {errors.password && <p className="mt-3 text-sm text-red-500">Password is required</p>}
         </div>
-        <div className="flex items-center justify-between my-5">
-          <div></div>
-          <Link
-            href="/forgot-password"
-            className="text-blue-500 text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
-          >
-            Forgot password?
-          </Link>
-        </div>
         <button
           className="w-full bg-blue-700 text-white text-sm font-bold py-3 px-4 rounded-md hover:bg-blue-700 transition duration-300"
           type="submit"

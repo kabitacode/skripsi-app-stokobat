@@ -1,8 +1,24 @@
 "use client"
 
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Button, { ButtonProps } from '@mui/material/Button';
+
+import { Button, ButtonProps } from '@mui/material';
+import { styled } from '@mui/system';
+
+interface CustomButtonProps extends ButtonProps {
+  fontSize?: string;
+  buttonColor?: string;
+  textColor?: string;
+  textTransform?: string;
+  icon?: React.ReactNode;
+}
+
+export const ButtonCustom = styled(Button)<CustomButtonProps>`
+  font-size: ${(props) => props.fontSize || '0.875rem'};
+  background-color: ${(props) => props.buttonColor || 'initial'};
+  color: ${(props) => props.textColor || 'initial'};
+  text-transform: ${(props) => props.textTransform || 'none'};
+`;
 
 export const CustomButton = styled(Button)({
     boxShadow: 'none',
@@ -40,4 +56,5 @@ export const CustomButton = styled(Button)({
       boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
     },
   });
+
   

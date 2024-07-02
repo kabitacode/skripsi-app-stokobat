@@ -18,10 +18,11 @@ export const login = async (email: string, password: string): Promise<LoginRespo
   return response.data;
 };
 
-export const logout = async (): Promise<void> => {
+export const logout = async (token: string): Promise<void> => {
   await api.delete('/logout',{
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      'Authorization': `Bearer ${token}`
     }
   });
 };

@@ -50,8 +50,10 @@ export default function DashboardLayout({ children }: any) {
    }
 
    const handleLogout = async () => {
+      if (!user?.token) return;
+      
       try {
-         await logout();
+         await logout(user?.token);
          clearUser();
          router.push('/');
       } catch (error: any) {

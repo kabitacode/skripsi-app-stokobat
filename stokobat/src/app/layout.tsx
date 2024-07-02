@@ -22,11 +22,11 @@ export default function RootLayout({
   const router = useRouter();
   const { user } = useStore();
 
-  useEffect(() => {
-    if (!user?.token) {
-      router.push('/');
-    }
-  }, [user, router]); 
+  // useEffect(() => { 
+  //   if (!user?.token) {
+  //     router.push('/');
+  //   }
+  // }, [user, router]); 
 
 
   return (

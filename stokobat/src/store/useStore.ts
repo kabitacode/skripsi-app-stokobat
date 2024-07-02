@@ -1,5 +1,5 @@
 // store/useStore.ts
-import create from 'zustand';
+import { create } from 'zustand';
 
 export interface User {
   email: string;
@@ -16,8 +16,14 @@ interface AuthState {
 
 const useStore = create<AuthState>((set) => ({
   user: null,
-  setUser: (user) => set({ user }),
-  clearUser: () => set({ user: null }),
+  setUser: (user) => {
+    localStorage.setItem('token', user.token); 
+    set({ user });
+  },
+  clearUser: () => {
+    localStorage.removeItem('token'); 
+    set({ user: null });
+  },
 }));
 
 export default useStore;

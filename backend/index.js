@@ -9,6 +9,7 @@ import ObatRoute from './routes/ObatRoute.js';
 import AuthRoute from './routes/AuthRoute.js';
 import KategoriRoute from './routes/KategoriRoute.js';
 import BatchRoute from './routes/BatchRoute.js';
+import bodyParser from 'body-parser';
 
 
 dotenv.config();
@@ -36,6 +37,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use(express.json());
+app.use(bodyParser.json());
+
 app.use(AuthRoute);
 app.use(UserRoute);
 app.use(ObatRoute);

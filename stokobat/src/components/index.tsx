@@ -1,6 +1,7 @@
-import { CustomButton } from "./button";
+import { CustomButton, ButtonCustom } from "./button";
 import { StyledMenu } from './menu';
 export {
     CustomButton,
-    StyledMenu
+    StyledMenu,
+    ButtonCustom
 }
