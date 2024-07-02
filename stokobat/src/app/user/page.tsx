@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
 import { fetchUsers, fetchUsersDelete } from '@/services';
-import useStore from '@/store/useStore'
+import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle } from '@mui/material';
 import { toast } from 'react-hot-toast';
 
@@ -17,7 +17,7 @@ interface dataResponse {
 
 const Page: React.FC = () => {
     const router = useRouter();
-    const { user } = useStore();
+    const { user, setUser } = useStore();
     const [data, setData] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -35,7 +35,7 @@ const Page: React.FC = () => {
             setLoading(false);
 
         } catch (error: any) {
-            setError(error.response?.data?.message || error.message);
+            toast.error(error.response?.data?.message || error.message);
         } finally {
             setLoading(false);
         }
@@ -73,12 +73,13 @@ const Page: React.FC = () => {
         }
     };
 
+
     return (
         <DashboardLayout>
             {
                 loading && <CircularProgress />
             }
-            
+
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
                 <div className="">
 

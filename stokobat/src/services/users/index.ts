@@ -14,6 +14,20 @@ export const fetchUsers = async (token: string) => {
     }
   };
 
+  export const fetchUsersId = async (token: string, id: string) => {
+    try {
+      const response = await api.get(`users/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   export const fetchUsersAdd = async (token: string, postData: any) => {
     try {
       const response = await api.post('/users', postData, {
@@ -28,9 +42,9 @@ export const fetchUsers = async (token: string) => {
     }
   };
 
-  export const fetchUsersEdit = async (token: string, postData: any) => {
+  export const fetchUsersEdit = async (token: string, id: string, postData: any) => {
     try {
-      const response = await api.post('/users', postData, {
+      const response = await api.patch(`users/${id}`, postData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

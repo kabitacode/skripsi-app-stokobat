@@ -1,12 +1,12 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import DashboardLayout from "../../dashboard/layout";
+import { useRouter, useParams } from 'next/navigation';
+import DashboardLayout from "../../../dashboard/layout";
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { TextField, Button, IconButton } from '@mui/material'; // Import komponen TextField dari Material-UI
+import { TextField, Button, IconButton } from '@mui/material';
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchUsersAdd } from '@/services';
+import { fetchUsersAdd, fetchUsersEdit, fetchUsersId } from '@/services';
 import useStore from '@/store/useStore';
 import { ArrowBack } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
@@ -30,6 +30,33 @@ const Page: React.FC<FormData> = () => {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const { user } = useStore();
+    const params = useParams<{ id: string }>()
+
+
+    const fetchDataUsers = async () => {
+        if (!user || !user.token) return;
+
+        try {
+            const response = await fetchUsersId(user?.token, params.id);
+            const result = response.data;
+
+            reset({
+                name: result.name,
+                role: result.role,
+                email: result.email,
+            })
+            setLoading(false);
+
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDataUsers();
+    }, [user]);
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         if (!user || !user.token) return;
@@ -39,12 +66,17 @@ const Page: React.FC<FormData> = () => {
                 name: data.name,
                 email: data.email,
                 role: data.role,
-                password: data.password,
-                confPassword: data.confPassword,
+                password: "",
+                confPassword: ""
             };
-            const response = await fetchUsersAdd(user?.token, postData);
+            const response = await fetchUsersEdit(user?.token, params.id, postData);
             toast.success(response.message || "Data berhasil Ditambahkan!");
-            reset();
+            reset({
+                name: "",
+                role: "",
+                email: "",
+            });
+            router.back();
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
         } finally {
@@ -58,7 +90,7 @@ const Page: React.FC<FormData> = () => {
                 <IconButton onClick={() => router.back()}>
                     <ArrowBack />
                 </IconButton>
-                <h1 className="text-2xl font-semibold mt-1 ml-2">Tambah Data User</h1>
+                <h1 className="text-2xl font-semibold mt-1 ml-2">Edit Data User</h1>
             </div>
 
             <div className='ml-7'>
@@ -70,6 +102,7 @@ const Page: React.FC<FormData> = () => {
                                 label="Name"
                                 variant="outlined"
                                 fullWidth
+                                InputLabelProps={{ shrink: true }}
                                 error={!!errors.name}
                                 helperText={errors.name && "Name is required"}
                                 {...register('name', { required: true })}
@@ -82,47 +115,23 @@ const Page: React.FC<FormData> = () => {
                                 variant="outlined"
                                 fullWidth
                                 error={!!errors.role}
+                                InputLabelProps={{ shrink: true }}
                                 helperText={errors.role && "Role is required"}
                                 {...register('role', { required: true })}
                             />
                         </div>
                     </div>
-                    <div className='flex flex-row mb-5'>
-                        <div className="w-1/3 mr-5">
-                            <TextField
-                                id="email"
-                                label="Email"
-                                type='email'
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.email}
-                                helperText={errors.email && "Email is required"}
-                                {...register('email', { required: true })}
-                            />
-                        </div>
-                        <div className="w-1/3">
-                            <TextField
-                                id="password"
-                                label="password"
-                                variant="outlined"
-                                type='password'
-                                fullWidth
-                                error={!!errors.password}
-                                helperText={errors.password && "password is required"}
-                                {...register('password', { required: true })}
-                            />
-                        </div>
-                    </div>
-                    <div className="w-1/3">
+                    <div className="w-1/3 mr-5">
                         <TextField
-                            id="confPassword"
-                            label="confirm Password"
+                            id="email"
+                            label="Email"
+                            type='email'
                             variant="outlined"
-                            type='password'
                             fullWidth
-                            error={!!errors.confPassword}
-                            helperText={errors.confPassword && "confirm password is required"}
-                            {...register('confPassword', { required: true })}
+                            error={!!errors.email}
+                            InputLabelProps={{ shrink: true }}
+                            helperText={errors.email && "Email is required"}
+                            {...register('email', { required: true })}
                         />
                     </div>
                     <div className="mt-8">
@@ -135,7 +144,7 @@ const Page: React.FC<FormData> = () => {
                             disabled={loading}
                             style={{ textTransform: 'none' }}
                         >
-                            {loading ? 'Loading...' : 'Tambah'}
+                            {loading ? 'Loading...' : 'Edit'}
                         </Button>
                     </div>
                 </form>
