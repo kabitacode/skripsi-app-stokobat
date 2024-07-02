@@ -6,11 +6,14 @@ import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchUsers } from '@/services';
+import { fetchUsers, fetchUsersDelete } from '@/services';
 import useStore from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle } from '@mui/material';
+import { toast } from 'react-hot-toast';
 
-
+interface dataResponse {
+    message: string
+}
 
 const Page: React.FC = () => {
     const router = useRouter();
@@ -20,43 +23,27 @@ const Page: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [dataDelete, setDataDelete] = useState<dataResponse>();
 
-    // Check if user is authenticated
-    useEffect(() => {
-        if (!user?.token) {
-            setError('User is not authenticated');
+
+    const fetchDataUsers = async () => {
+        if (!user || !user.token) return;
+
+        try {
+            const apiData = await fetchUsers(user?.token);
+            setData(apiData.data);
+            setLoading(false);
+
+        } catch (error: any) {
+            setError(error.response?.data?.message || error.message);
+        } finally {
             setLoading(false);
         }
-    }, [user]);
+    };
 
     useEffect(() => {
-        const fetchDataUsers = async () => {
-            if (!user || !user.token) return;
-
-            try {
-                const apiData = await fetchUsers(user?.token);
-                setData(apiData.data);
-                setLoading(false);
-                console.log(apiData);
-
-            } catch (error: any) {
-                console.log(error);
-
-                setError(error.response?.data?.message || error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchDataUsers();
     }, [user]);
-
-
-
-
-    if (loading) {
-        return <CircularProgress />;
-    }
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -71,21 +58,27 @@ const Page: React.FC = () => {
         router.push(`/user/edit/${id}`);
     };
 
-    const handleDelete = (id: string) => {
-        // Logika untuk meng-handle tombol delete
-        console.log('Delete item with ID:', id);
+    const handleDelete = async (id: string) => {
+        if (!user || !user.token) return;
+
+        try {
+            const apiData = await fetchUsersDelete(user?.token, id);
+            toast.success(apiData.message || "Data berhasil Ditambahkan!");
+            fetchDataUsers();
+            setLoading(false);
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <DashboardLayout>
             {
-                error && <div className="mb-5 mt-5 w-1/2">
-                    <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
-                        {error}
-                    </Alert>
-                </div>
+                loading && <CircularProgress />
             }
+            
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
                 <div className="">
 
@@ -104,7 +97,7 @@ const Page: React.FC = () => {
                     <TableHead className='bg-blue-700'>
                         <TableRow>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Name</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Email</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Role</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell>

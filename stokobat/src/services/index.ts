@@ -1,5 +1,5 @@
 import {fetchObat} from '@/services/obat';
-import {fetchUsers, fetchUsersAdd} from '@/services/users';
+import {fetchUsers, fetchUsersAdd, fetchUsersDelete} from '@/services/users';
 import {login, logout} from '@/services/auth';
 import {api} from '@/services/api';
 
@@ -9,6 +9,7 @@ export {
     login,
     logout,
     fetchUsers,
-    fetchUsersAdd
+    fetchUsersAdd,
+    fetchUsersDelete
 }
 

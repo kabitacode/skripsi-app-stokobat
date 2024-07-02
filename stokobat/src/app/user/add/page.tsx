@@ -1,14 +1,15 @@
 "use client"
 
-import { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from "../../dashboard/layout";
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { TextField, Button, Alert, AlertTitle, IconButton } from '@mui/material'; // Import komponen TextField dari Material-UI
+import { TextField, Button, IconButton } from '@mui/material'; // Import komponen TextField dari Material-UI
 import { CustomButton, ButtonCustom } from "@/components";
 import { fetchUsersAdd } from '@/services';
 import useStore from '@/store/useStore';
 import { ArrowBack } from '@mui/icons-material';
+import { toast } from 'react-hot-toast';
 
 interface FormData {
     name: string;
@@ -42,40 +43,17 @@ const Page: React.FC<FormData> = () => {
                 confPassword: data.confPassword,
             };
             const response = await fetchUsersAdd(user?.token, postData);
-            setData({
-                message: response.message || "Data berhasil Ditambahkan!"
-            });
+            toast.success(response.message || "Data berhasil Ditambahkan!");
             reset();
-            setError(null)
         } catch (error: any) {
-            setError(error.response?.data?.message || error.message);
+            toast.error(error.response?.data?.message || error.message);
         } finally {
-            setError(null);
             setLoading(false);
         }
     };
 
     return (
         <DashboardLayout>
-            {
-                error && <div className="mb-5 mt-5 w-1/2">
-                    <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
-                        {error}
-                    </Alert>
-                </div>
-            }
-
-            {
-                data?.message && <div className="mb-5 mt-5 w-1/2">
-                    <Alert severity="success">
-                        <AlertTitle>Error</AlertTitle>
-                        {data.message}
-                    </Alert>
-                </div>
-            }
-
-
             <div className="flex flex-row mt-4 ml-4 mr-4 mb-10">
                 <IconButton onClick={() => router.back()}>
                     <ArrowBack />
