@@ -3,9 +3,7 @@ import argon2 from 'argon2'
 
 export const getUser = async (req, res) => {
     try {
-        const response = await UserModel.findAll({
-            attributes: ['id', 'name', 'email', 'role']
-        });
+        const response = await UserModel.findAll();
         res.status(200).json({
             status: 200,
             message: "success",
@@ -23,6 +21,7 @@ export const getUserById = async (req, res) => {
                 id: req.params.id
             }
         });
+
         res.status(200).json({
             status: 200,
             message: "success",
@@ -34,17 +33,17 @@ export const getUserById = async (req, res) => {
 }
 
 export const createUser = async (req, res) => {
-    const { name, email, password, confPassword, role } = req.body;
-    if (password !== confPassword) {
-        return res.status(400).json({ message: "Password dan Confirm Password tidak sama!" });
-    }
+    const { name, email, password, role } = req.body;
+    // if (password !== confPassword) {
+    //     return res.status(400).json({ message: "Password dan Confirm Password tidak sama!" });
+    // }
+    // const hasPassword = await argon2.hash(password);
 
-    const hasPassword = await argon2.hash(password);
     try {
         await UserModel.create({
             name: name,
             email: email,
-            password: hasPassword,
+            password: password,
             role: role
         });
         res.status(201).json({
@@ -64,23 +63,14 @@ export const updateUser = async(req, res) => {
     });
 
     if(!user) return res.status(404).json({message: "Data Tidak Ditemukan!"});
-    const { name, email, password, confPassword, role } = req.body;
-    let hashPassword;
-    if (password === "" || password === null) {
-        hashPassword = user.password;
-    }else{
-        hashPassword = await argon2.hash(password);
-    }
-
-    if (password !== confPassword) {
-        return res.status(400).json({ message: "Password dan Confirm Password tidak sama!" });
-    }
+    const { name, email, password, role } = req.body;
+   
 
     try {
         await UserModel.update({
             name: name,
             email: email,
-            password: hashPassword,
+            password: password,
             role: role
         }, {
             where: {
