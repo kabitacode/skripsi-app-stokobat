@@ -16,7 +16,6 @@ interface FormData {
     role: string;
     email: string;
     password: string;
-    confPassword: string;
 }
 
 interface dataResponse {
@@ -39,11 +38,14 @@ const Page: React.FC<FormData> = () => {
         try {
             const response = await fetchUsersId(user?.token, params.id);
             const result = response.data;
+            console.log(result);
+            
 
             reset({
                 name: result.name,
                 role: result.role,
                 email: result.email,
+                password: result.password
             })
             setLoading(false);
 
@@ -66,7 +68,7 @@ const Page: React.FC<FormData> = () => {
                 name: data.name,
                 email: data.email,
                 role: data.role,
-                password: "",
+                password: data.password,
                 confPassword: ""
             };
             const response = await fetchUsersEdit(user?.token, params.id, postData);
@@ -75,6 +77,7 @@ const Page: React.FC<FormData> = () => {
                 name: "",
                 role: "",
                 email: "",
+                password: ""
             });
             router.back();
         } catch (error: any) {
@@ -110,6 +113,22 @@ const Page: React.FC<FormData> = () => {
                         </div>
                         <div className="w-1/3">
                             <TextField
+                                id="email"
+                                label="Email"
+                                type='email'
+                                variant="outlined"
+                                fullWidth
+                                error={!!errors.email}
+                                InputLabelProps={{ shrink: true }}
+                                helperText={errors.email && "Email is required"}
+                                {...register('email', { required: true })}
+                            />
+
+                        </div>
+                    </div>
+                    <div className='flex flex-row mb-5'>
+                        <div className="w-1/3 mr-5">
+                            <TextField
                                 id="role"
                                 label="Role"
                                 variant="outlined"
@@ -120,19 +139,19 @@ const Page: React.FC<FormData> = () => {
                                 {...register('role', { required: true })}
                             />
                         </div>
-                    </div>
-                    <div className="w-1/3 mr-5">
-                        <TextField
-                            id="email"
-                            label="Email"
-                            type='email'
-                            variant="outlined"
-                            fullWidth
-                            error={!!errors.email}
-                            InputLabelProps={{ shrink: true }}
-                            helperText={errors.email && "Email is required"}
-                            {...register('email', { required: true })}
-                        />
+                        <div className="w-1/3 mr-5">
+                            <TextField
+                                id="password"
+                                label="password"
+                                variant="outlined"
+                                type='password'
+                                fullWidth
+                                error={!!errors.password}
+                                InputLabelProps={{ shrink: true }}
+                                helperText={errors.password && "password is required"}
+                                {...register('password', { required: true })}
+                            />
+                        </div>
                     </div>
                     <div className="mt-8">
                         <Button

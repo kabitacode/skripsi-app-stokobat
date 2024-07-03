@@ -1,5 +1,4 @@
 import UserModel from '../models/UserModel.js';
-import argon2 from 'argon2'
 
 export const getUser = async (req, res) => {
     try {
@@ -38,7 +37,7 @@ export const createUser = async (req, res) => {
     //     return res.status(400).json({ message: "Password dan Confirm Password tidak sama!" });
     // }
     // const hasPassword = await argon2.hash(password);
-
+    
     try {
         await UserModel.create({
             name: name,
@@ -55,16 +54,16 @@ export const createUser = async (req, res) => {
     }
 }
 
-export const updateUser = async(req, res) => {
+export const updateUser = async (req, res) => {
     const user = await UserModel.findOne({
         where: {
             id: req.params.id
         }
     });
 
-    if(!user) return res.status(404).json({message: "Data Tidak Ditemukan!"});
+    if (!user) return res.status(404).json({ message: "Data Tidak Ditemukan!" });
     const { name, email, password, role } = req.body;
-   
+
 
     try {
         await UserModel.update({
@@ -86,15 +85,15 @@ export const updateUser = async(req, res) => {
     }
 }
 
-export const deleteUser = async(req, res) => {
+export const deleteUser = async (req, res) => {
     const user = await UserModel.findOne({
         where: {
             id: req.params.id
         }
     });
 
-    if(!user) return res.status(404).json({message: "User Tidak Ditemukan!"});
-  
+    if (!user) return res.status(404).json({ message: "User Tidak Ditemukan!" });
+
     try {
         await UserModel.destroy({
             where: {

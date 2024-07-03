@@ -16,7 +16,6 @@ interface FormData {
     role: string;
     email: string;
     password: string;
-    confPassword: string;
 }
 
 interface dataResponse {
@@ -40,7 +39,6 @@ const Page: React.FC<FormData> = () => {
                 email: data.email,
                 role: data.role,
                 password: data.password,
-                confPassword: data.confPassword,
             };
             const response = await fetchUsersAdd(user?.token, postData);
             toast.success(response.message || "Data berhasil Ditambahkan!");
@@ -77,19 +75,6 @@ const Page: React.FC<FormData> = () => {
                         </div>
                         <div className="w-1/3">
                             <TextField
-                                id="role"
-                                label="Role"
-                                variant="outlined"
-                                fullWidth
-                                error={!!errors.role}
-                                helperText={errors.role && "Role is required"}
-                                {...register('role', { required: true })}
-                            />
-                        </div>
-                    </div>
-                    <div className='flex flex-row mb-5'>
-                        <div className="w-1/3 mr-5">
-                            <TextField
                                 id="email"
                                 label="Email"
                                 type='email'
@@ -98,6 +83,19 @@ const Page: React.FC<FormData> = () => {
                                 error={!!errors.email}
                                 helperText={errors.email && "Email is required"}
                                 {...register('email', { required: true })}
+                            />
+                        </div>
+                    </div>
+                    <div className='flex flex-row mb-5'>
+                        <div className="w-1/3 mr-5">
+                            <TextField
+                                id="role"
+                                label="Role"
+                                variant="outlined"
+                                fullWidth
+                                error={!!errors.role}
+                                helperText={errors.role && "Role is required"}
+                                {...register('role', { required: true })}
                             />
                         </div>
                         <div className="w-1/3">
@@ -112,18 +110,6 @@ const Page: React.FC<FormData> = () => {
                                 {...register('password', { required: true })}
                             />
                         </div>
-                    </div>
-                    <div className="w-1/3">
-                        <TextField
-                            id="confPassword"
-                            label="confirm Password"
-                            variant="outlined"
-                            type='password'
-                            fullWidth
-                            error={!!errors.confPassword}
-                            helperText={errors.confPassword && "confirm password is required"}
-                            {...register('confPassword', { required: true })}
-                        />
                     </div>
                     <div className="mt-8">
                         <Button

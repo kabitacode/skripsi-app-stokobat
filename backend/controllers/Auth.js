@@ -1,5 +1,4 @@
 import UserModel from '../models/UserModel.js';
-import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
 const blacklistedTokens = new Set();
@@ -13,8 +12,7 @@ export const logIn = async (req, res) => {
         });
 
         if (!user) return res.status(404).json({ message: "User Tidak Ditemukan!" });
-        const match = await argon2.verify(user.password, req.body.password);
-        if (!match) {
+        if (user.password !== req.body.password) {
             return res.status(400).json({ message: "Password Salah!" });
         }
 

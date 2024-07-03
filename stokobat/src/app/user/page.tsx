@@ -101,6 +101,7 @@ const Page: React.FC = () => {
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Email</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Role</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Password</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -111,6 +112,7 @@ const Page: React.FC = () => {
                                 <TableCell>{item.name}</TableCell>
                                 <TableCell>{item.email}</TableCell>
                                 <TableCell>{item.role}</TableCell>
+                                <TableCell>{item.password}</TableCell>
                                 <TableCell>
                                     <div className='flex flex-row justify-center'>
                                         <div className='mr-2'>
