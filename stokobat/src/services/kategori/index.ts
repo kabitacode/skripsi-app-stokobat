@@ -1,8 +1,8 @@
 import { api } from "../api";
 
-export const fetchObat = async (token: string) => {
+export const fetchKategori = async (token: string) => {
     try {
-      const response = await api.get('/obat', {
+      const response = await api.get('/kategori', {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
@@ -14,9 +14,9 @@ export const fetchObat = async (token: string) => {
     }
   };
 
-  export const fetchObatId = async (token: string, id: string) => {
+  export const fetchKategoriId = async (token: string, id: string) => {
     try {
-      const response = await api.get(`obat/${id}`, {
+      const response = await api.get(`kategori/${id}`, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
@@ -28,9 +28,9 @@ export const fetchObat = async (token: string) => {
     }
   };
 
-  export const fetchObatAdd = async (token: string, postData: any) => {
+  export const fetchKategoriAdd = async (token: string, postData: any) => {
     try {
-      const response = await api.post('/obat', postData, {
+      const response = await api.post('/kategori', postData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -42,9 +42,9 @@ export const fetchObat = async (token: string) => {
     }
   };
 
-  export const fetchObatEdit = async (token: string, id: string, postData: any) => {
+  export const fetchKategoriEdit = async (token: string, id: string, postData: any) => {
     try {
-      const response = await api.patch(`obat/${id}`, postData, {
+      const response = await api.patch(`kategori/${id}`, postData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -56,9 +56,9 @@ export const fetchObat = async (token: string) => {
     }
   };
 
-  export const fetchObatDelete = async (token: string, id: string) => {
+  export const fetchKategoriDelete = async (token: string, id: string) => {
     try {
-      const response = await api.delete(`obat/${id}`, {
+      const response = await api.delete(`kategori/${id}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

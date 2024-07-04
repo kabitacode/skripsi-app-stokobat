@@ -38,9 +38,6 @@ const Page: React.FC<FormData> = () => {
         try {
             const response = await fetchUsersId(user?.token, params.id);
             const result = response.data;
-            console.log(result);
-            
-
             reset({
                 name: result.name,
                 role: result.role,
@@ -48,7 +45,6 @@ const Page: React.FC<FormData> = () => {
                 password: result.password
             })
             setLoading(false);
-
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
         } finally {

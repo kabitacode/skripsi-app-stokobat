@@ -1,12 +1,12 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import DashboardLayout from "../../dashboard/layout";
+import { useParams, useRouter } from 'next/navigation';
+import DashboardLayout from "../../../dashboard/layout";
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { TextField, Button, IconButton, Box, InputLabel, MenuItem, FormControl, CircularProgress } from '@mui/material';
+import { TextField, Button, IconButton, InputLabel, MenuItem, FormControl, CircularProgress } from '@mui/material';
 import Select from '@mui/material/Select';
-import { fetchKategori, fetchObatAdd, fetchUsersAdd } from '@/services';
+import { fetchKategori, fetchObat, fetchObatEdit, fetchObatId } from '@/services';
 import useStore from '@/store/useStore';
 import { ArrowBack } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
@@ -38,6 +38,7 @@ const Page: React.FC = () => {
 
     const router = useRouter();
     const { user } = useStore();
+    const params = useParams<{ id: string }>()
 
     const fetchData = async () => {
         if (!user || !user.token) return;
@@ -55,7 +56,30 @@ const Page: React.FC = () => {
         }
     };
 
+
+    const fetchDataId = async () => {
+        if (!user || !user.token) return;
+
+        try {
+            const response = await fetchObatId(user?.token, params.id);
+            const result = response.data;
+           
+            setLoading(false);
+            setValue('name', result.nama_obat);
+            setValue('stok', result.stok);
+            setValue('harga', result.harga);
+            setTanggal(dayjs(result.tanggal_kadaluarsa))
+            setValue('kategori', result.kategori.id);
+
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
+        fetchDataId()
         fetchData();
     }, [user]);
 
@@ -65,30 +89,36 @@ const Page: React.FC = () => {
         setLoading(true);
         try {
             const postData = {
-                nama_obat: data.name,
+                name: data.name,
                 stok: data.stok,
                 harga: data.harga,
                 tanggal_kadaluarsa: tanggal?.format('YYYY-MM-DD'),
-                id_kategori: data.kategori,
+                id_kategori: data.kategori
             };
-            const response = await fetchObatAdd(user?.token, postData);
-            toast.success(response.message || "Data berhasil Ditambahkan!");
-            reset();
-            setTanggal(dayjs());
+            const response = await fetchObatEdit(user?.token, params.id, postData);
+            toast.success(response.message || "Data berhasil Diubah!");
+            reset({
+                name: "",
+                stok: "",
+                harga: "",
+                tanggal: "",
+                kategori: ""
+            });
+            setTanggal(null)
+            router.back();
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
         } finally {
             setLoading(false);
         }
     };
-
     return (
         <DashboardLayout>
             <div className="flex flex-row mt-4 ml-4 mr-4 mb-10">
                 <IconButton onClick={() => router.back()}>
                     <ArrowBack />
                 </IconButton>
-                <h1 className="text-2xl font-semibold mt-1 ml-2">Tambah Data Obat</h1>
+                <h1 className="text-2xl font-semibold mt-1 ml-2">Edit Data Obat</h1>
                 {
                     loading && <CircularProgress/>
                 }
@@ -104,6 +134,7 @@ const Page: React.FC = () => {
                                 variant="outlined"
                                 fullWidth
                                 error={!!errors.name}
+                                InputLabelProps={{ shrink: true }}
                                 helperText={errors.name && "Nama Obat is required"}
                                 {...register('name', { required: true })}
                             />
@@ -114,6 +145,7 @@ const Page: React.FC = () => {
                                 label="Stok"
                                 type='number'
                                 variant="outlined"
+                                InputLabelProps={{ shrink: true }}
                                 fullWidth
                                 error={!!errors.stok}
                                 helperText={errors.stok && "Stok is required"}
@@ -130,6 +162,7 @@ const Page: React.FC = () => {
                                 variant="outlined"
                                 fullWidth
                                 error={!!errors.harga}
+                                InputLabelProps={{ shrink: true }}
                                 helperText={errors.harga && "Harga is required"}
                                 {...register('harga', { required: true })}
                             />

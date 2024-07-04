@@ -1,53 +1,87 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-
-import { Alert, AlertTitle, Button, CircularProgress } from "@mui/material";
+import { useRouter } from 'next/navigation';
 import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
-import { Add } from "@mui/icons-material";
-import { CustomButton } from "@/components";
-import { fetchObat } from '@/services';
+import { Add, Delete, Edit } from "@mui/icons-material";
+import { CustomButton, ButtonCustom } from "@/components";
+import { fetchObat, fetchObatDelete } from '@/services';
+import useStore, { User } from '@/store/useStore'
+import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle } from '@mui/material';
+import { toast } from 'react-hot-toast';
 
-
+interface dataResponse {
+    message: string
+}
 
 const Page: React.FC = () => {
+    const router = useRouter();
+    const { user, setUser } = useStore();
     const [data, setData] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [dataDelete, setDataDelete] = useState<dataResponse>();
+
+
+    const fetchData = async () => {
+        if (!user || !user.token) return;
+
+        try {
+            const apiData = await fetchObat(user?.token);
+            setData(apiData.data);
+            console.log(apiData);
+            
+            setLoading(false);
+
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchDataFromApi = async () => {
-            try {
-                const apiData = await fetchObat();
-                console.log(apiData);
+        fetchData();
+    }, [user]);
 
-                setData(apiData);
-                setLoading(false);
-            } catch (error: any) {
-                setError(error.response?.data?.message || error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
 
-        fetchDataFromApi();
-    }, []);
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0); // Reset page to 0
+    };
 
-    if (loading) {
-        return <CircularProgress />;
-    }
+    const handleEdit = (id: string) => {
+        router.push(`/obat/edit/${id}`);
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!user || !user.token) return;
+
+        try {
+            const apiData = await fetchObatDelete(user?.token, id);
+            toast.success(apiData.message || "Data berhasil Dihapus!");
+            fetchData();
+            setLoading(false);
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     return (
         <DashboardLayout>
             {
-                error && <div className="mb-5 mt-5 w-1/2">
-                    <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
-                        {error}
-                    </Alert>
-                </div>
+                loading && <CircularProgress />
             }
+
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
                 <div className="">
 
@@ -59,6 +93,71 @@ const Page: React.FC = () => {
                         </CustomButton>
                     </Link>
                 </div>
+            </div>
+
+            <div className='mx-5'>
+                <Table>
+                    <TableHead className='bg-blue-700'>
+                        <TableRow>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Kadaluarsa</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Uploader</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                            <TableRow key={item.id}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{item.nama_obat}</TableCell>
+                                <TableCell>{item.kategori.nama}</TableCell>
+                                <TableCell>{item.stok}</TableCell>
+                                <TableCell>{item.harga}</TableCell>
+                                <TableCell>{item.tanggal_kadaluarsa}</TableCell>
+                                <TableCell>{item.user.name} | {item.user.role}</TableCell>
+                                <TableCell>
+                                    <div className='flex flex-row justify-center'>
+                                        <div className='mr-2'>
+                                            <ButtonCustom
+                                                color='success'
+                                                onClick={() => handleEdit(item.id)}
+                                                fontSize="0.75rem"
+                                                textTransform="none"
+                                                variant='outlined'
+                                            >
+                                                Edit
+                                            </ButtonCustom>
+                                        </div>
+                                        <div>
+                                            <ButtonCustom
+                                                color="error"
+                                                onClick={() => handleDelete(item.id)}
+                                                variant="outlined"
+                                                textTransform='none'
+                                                fontSize="0.75rem"
+                                            >
+                                                Delete
+                                            </ButtonCustom>
+                                        </div>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={data.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
             </div>
         </DashboardLayout>
     )

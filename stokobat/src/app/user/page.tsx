@@ -63,7 +63,7 @@ const Page: React.FC = () => {
 
         try {
             const apiData = await fetchUsersDelete(user?.token, id);
-            toast.success(apiData.message || "Data berhasil Ditambahkan!");
+            toast.success(apiData.message || "Data berhasil Dihapus!");
             fetchDataUsers();
             setLoading(false);
         } catch (error: any) {
