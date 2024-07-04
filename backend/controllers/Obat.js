@@ -45,7 +45,7 @@ export const getObatById = async (req, res) => {
 
 export const createObat = async (req, res) => {
     const { nama_obat, stok, harga, tanggal_kadaluarsa, id_kategori } = req.body;
-    const user_id = req.user_id;
+    const user_id = req.userId;
     try {
         const result = await ObatModel.create({
             nama_obat: nama_obat,
@@ -67,7 +67,7 @@ export const createObat = async (req, res) => {
 
 export const updateObat = async (req, res) => {
     const { nama_obat, stok, harga, tanggal_kadaluarsa, id_kategori } = req.body;
-    const user_id = req.user_id;
+    const user_id = req.userId;
     try {
         const user = await ObatModel.findOne({
             where: {
