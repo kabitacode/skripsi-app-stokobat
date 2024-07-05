@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import db from './config/database.js';
+import bodyParser from 'body-parser';
 
 //Route
 import UserRoute from './routes/UserRoute.js';
@@ -9,7 +10,9 @@ import ObatRoute from './routes/ObatRoute.js';
 import AuthRoute from './routes/AuthRoute.js';
 import KategoriRoute from './routes/KategoriRoute.js';
 import BatchRoute from './routes/BatchRoute.js';
-import bodyParser from 'body-parser';
+import PenjualanRoute from './routes/PenjualanRoute.js';
+import DashboardRoute from './routes/DashboardRoute.js';
+
 
 
 dotenv.config();
@@ -44,6 +47,8 @@ app.use(UserRoute);
 app.use(ObatRoute);
 app.use(KategoriRoute);
 app.use(BatchRoute);
+app.use(PenjualanRoute);
+app.use(DashboardRoute);
 
 
 
