@@ -68,7 +68,7 @@ const Page: React.FC<FormData> = () => {
                 confPassword: ""
             };
             const response = await fetchUsersEdit(user?.token, params.id, postData);
-            toast.success(response.message || "Data berhasil Ditambahkan!");
+            toast.success(response.message || "Data berhasil Diubah!");
             reset({
                 name: "",
                 role: "",
