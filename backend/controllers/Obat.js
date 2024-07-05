@@ -9,6 +9,9 @@ export const getObat = async (req, res) => {
             include: [
                 { model: KategoriModel },
                 { model: UserModel, attributes: ['id', 'name', 'email', 'role'] }
+            ],
+            order: [
+                "tanggal_kadaluarsa", "ASC"
             ]
         });
         res.status(200).json({
