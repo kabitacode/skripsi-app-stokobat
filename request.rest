@@ -1,6 +1,6 @@
 POST http://localhost:5000/api/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzE5OTk2OTAzLCJleHAiOjE3MjA2MDE3MDN9.RYcZ9xoSJxhaAdNNCfX_sjb2SFPHvNMOCvgattFNDa4
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMDc2NjE1LCJleHAiOjE3MjA2ODE0MTV9.G5nI7Cf2uzcXc7iYdpxSKASmGr2hG6fPGV6QoGOtS3A
 
 {
     "name": "zul",
@@ -31,6 +31,10 @@ Content-Type: application/json
   "password": "123456"
 }
 
+###
+GET  http://localhost:5000/api/dashboard
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTAzODY4LCJleHAiOjE3MjA3MDg2Njh9.dhVlVu9a64J4O3T1L-iB-9FnvDRoPwf_VpZ_6GcpXvs
 
 ###
 GET  http://localhost:5000/api/me
@@ -85,6 +89,7 @@ Content-Type: application/json
 ###
 GET  http://localhost:5000/api/obat
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMDc2NjE1LCJleHAiOjE3MjA2ODE0MTV9.G5nI7Cf2uzcXc7iYdpxSKASmGr2hG6fPGV6QoGOtS3A
 
 ###
 GET  http://localhost:5000/obat/3
@@ -120,28 +125,22 @@ Content-Type: application/json
 
 
 ###
-GET  http://localhost:5000/batch
+GET  http://localhost:5000/api/batch
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTA1MTg5LCJleHAiOjE3MjA3MDk5ODl9.mYc7MgL3ZwGjoEQG94jBFcNXkMmbsn3artx3WKkd4OA
 
 ###
 GET  http://localhost:5000/batch/7
 Content-Type: application/json
 
 ###
-POST http://localhost:5000/batch
+POST http://localhost:5000/api/batch
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTA1MTg5LCJleHAiOjE3MjA3MDk5ODl9.mYc7MgL3ZwGjoEQG94jBFcNXkMmbsn3artx3WKkd4OA
 
 {
-    "batches": [
-        {
-            "tanggal_produksi": "2024-07-01",
-            "id_obat": 3
-        },
-        {
-            "tanggal_produksi": "2024-04-02",
-            "id_obat": 4
-        }
-    ]
+    "tanggal_produksi": "2024-04-01",
+    "id_obat": 6
 }
 
 ###
@@ -149,20 +148,22 @@ DELETE   http://localhost:5001/batch/12
 Content-Type: application/json
 
 ###
-PUT   http://localhost:5000/batch
+PATCH  http://localhost:5000/api/batch/1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTA1MTg5LCJleHAiOjE3MjA3MDk5ODl9.mYc7MgL3ZwGjoEQG94jBFcNXkMmbsn3artx3WKkd4OA
 
 {
-    "batches": [
-        {
-            "id": 1,
-            "tanggal_produksi": "2024-08-01",
-            "id_obat": 4
-        },
-        {
-            "id": 2,
-            "tanggal_produksi": "2024-04-03",
-            "id_obat": 4
-        }
-    ]
+    "tanggal_produksi": "2024-04-03",
+    "id_obat": 6
+}
+
+###
+POST http://localhost:5000/api/penjualan
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMDc2NjE1LCJleHAiOjE3MjA2ODE0MTV9.G5nI7Cf2uzcXc7iYdpxSKASmGr2hG6fPGV6QoGOtS3A
+
+{
+    "jumlah": 2,
+    "tanggal_transaksi": "2024-07-04",
+    "id_obat": 5
 }
