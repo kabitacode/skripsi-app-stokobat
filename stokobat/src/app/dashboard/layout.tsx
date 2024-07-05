@@ -145,7 +145,7 @@ export default function DashboardLayout({ children }: any) {
                   }
                   <li className={`py-1 ${activeLink === '/laporan' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                      <Link href="/laporan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
-                        <span className={`py-1 ${activeLink === '/laporan' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
+                        <span className={`py-1 ${activeLink === '/laporan' ? 'text-white ml-3' : 'ml-3'}`}>Laporan</span>
                      </Link>
                   </li>
                </ul>

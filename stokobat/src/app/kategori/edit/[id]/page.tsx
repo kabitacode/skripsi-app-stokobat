@@ -12,7 +12,7 @@ import { ArrowBack } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
 
 interface FormData {
-    name: string;
+    nama: string;
 }
 
 interface dataResponse {
@@ -36,7 +36,7 @@ const Page: React.FC<FormData> = () => {
             const response = await fetchKategoriId(user?.token, params.id);
             const result = response.data;
             reset({
-                name: result.nama,
+                nama: result.nama,
             })
             setLoading(false);
         } catch (error: any) {
@@ -55,12 +55,12 @@ const Page: React.FC<FormData> = () => {
         setLoading(true);
         try {
             const postData = {
-                name: data.name,
+                nama: data.nama,
             };
             const response = await fetchKategoriEdit(user?.token, params.id, postData);
             toast.success(response.message || "Data berhasil Diubah!");
             reset({
-                name: "",
+                nama: "",
             });
             router.back();
         } catch (error: any) {
@@ -84,13 +84,13 @@ const Page: React.FC<FormData> = () => {
                     <div className="w-1/3 mr-5 mb-5">
                         <TextField
                             id="name"
-                            label="Name"
+                            label="Nama Kategori"
                             variant="outlined"
                             fullWidth
                             InputLabelProps={{ shrink: true }}
-                            error={!!errors.name}
-                            helperText={errors.name && "Name is required"}
-                            {...register('name', { required: true })}
+                            error={!!errors.nama}
+                            helperText={errors.nama && "Nama Kategori is required"}
+                            {...register('nama', { required: true })}
                         />
                     </div>
                     <div className="mt-8">
