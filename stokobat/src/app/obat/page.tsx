@@ -8,7 +8,7 @@ import { Add, Delete, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
 import { fetchObat, fetchObatDelete } from '@/services';
 import useStore, { User } from '@/store/useStore'
-import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle } from '@mui/material';
+import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField } from '@mui/material';
 import { toast } from 'react-hot-toast';
 
 interface dataResponse {
@@ -23,7 +23,7 @@ const Page: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [dataDelete, setDataDelete] = useState<dataResponse>();
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
 
     const fetchData = async () => {
@@ -75,17 +75,24 @@ const Page: React.FC = () => {
         }
     };
 
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(event.target.value);
+        setPage(0); // Reset page to 0 when search query changes
+    };
+
+    const filteredData = data.filter(item =>
+        item.nama_obat.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <DashboardLayout>
-            {
+              {
                 loading && <CircularProgress />
             }
 
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
-                <div className="">
+                <h1 className="text-2xl font-semibold">Data Obat</h1>
 
-                </div>
                 <div className="">
                     <Link href={'/obat/add'}>
                         <CustomButton startIcon={<Add />}>
@@ -93,6 +100,16 @@ const Page: React.FC = () => {
                         </CustomButton>
                     </Link>
                 </div>
+            </div>
+
+            <div className="ml-5 mb-6 w-1/3">
+                <TextField
+                    label="Cari Obat"
+                    variant="outlined"
+                    fullWidth
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
             </div>
 
             <div className='mx-5'>
@@ -110,7 +127,7 @@ const Page: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                        {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
                             <TableRow key={item.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{item.nama_obat}</TableCell>
