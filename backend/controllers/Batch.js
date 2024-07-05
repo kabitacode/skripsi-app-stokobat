@@ -37,30 +37,26 @@ export const getBatchById = async (req, res) => {
 }
 
 export const createBatch = async (req, res) => {
-    const { batches } = req.body;
+    const { id_obat, tanggal_produksi, status_kadaluarsa } = req.body;
 
     try {
-        const results = await Promise.all(batches.map(async batch => {
-            const obat = await ObatModel.findByPk(batch.id_obat);
-            if (!obat) {
-                throw new Error(`Obat dengan id ${batch.id_obat} tidak ditemukan.`);
-            }
+        const obat = await ObatModel.findByPk(id_obat);
+        if (!obat) {
+            throw new Error(`Obat dengan id ${id_obat} tidak ditemukan.`);
+        }
 
-            const status_kadaluarsa = batch.tanggal_produksi > obat.tanggal_kadaluarsa ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
+        const status_kadaluarsa = tanggal_produksi > obat.tanggal_kadaluarsa ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
 
-            const createdBatch = await BatchObatModel.create({
-                id_obat: batch.id_obat,
-                tanggal_produksi: batch.tanggal_produksi,
-                status_kadaluarsa: status_kadaluarsa
-            });
-
-            return createdBatch;
-        }));
+        const result = await BatchObatModel.create({
+            id_obat: id_obat,
+            tanggal_produksi: tanggal_produksi,
+            status_kadaluarsa: status_kadaluarsa
+        });
 
         res.status(201).json({
             status: 201,
             message: "Batch obat created successfully",
-            data: results
+            data: result
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -68,42 +64,41 @@ export const createBatch = async (req, res) => {
 }
 
 export const updateBatch = async (req, res) => {
-    const { batches } = req.body;
+    const { id_obat, tanggal_produksi } = req.body;
 
     try {
 
-        const result = await Promise.all(batches.map(async batch => {
-            const existingBatch = await BatchObatModel.findOne({
-                where: {
-                    id: batch.id,
-                    id_obat: batch.id_obat
-                }
-            });
-
-            if (!existingBatch) {
-                throw new Error(`Batch obat dengan id ${batch.id} dan id_obat ${batch.id_obat} tidak ditemukan.`);
+        const existingBatch = await BatchObatModel.findOne({
+            where: {
+                id: req.params.id,
+                id_obat: id_obat
             }
+        });
 
-            const obat = await ObatModel.findByPk(batch.id_obat);
-            if (!obat) {
-                throw new Error(`Obat dengan id ${batch.id_obat} tidak ditemukan.`);
+        if (!existingBatch) {
+            throw new Error(`Batch obat dengan id ${req.params.id} dan id_obat ${id_obat} tidak ditemukan.`);
+        }
+
+        const obat = await ObatModel.findByPk(id_obat);
+        if (!obat) {
+            throw new Error(`Obat dengan id ${id_obat} tidak ditemukan.`);
+        }
+
+        const status_kadaluarsa = tanggal_produksi > obat.tanggal_kadaluarsa ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
+
+        await BatchObatModel.update({
+            id_obat: id_obat,
+            tanggal_produksi: tanggal_produksi,
+            status_kadaluarsa: status_kadaluarsa
+        }, {
+            where: {
+                id: req.params.id
             }
-
-            const status_kadaluarsa = batch.tanggal_produksi > obat.tanggal_kadaluarsa ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
-
-            // Update batch data
-            existingBatch.tanggal_produksi = batch.tanggal_produksi;
-            existingBatch.status_kadaluarsa = status_kadaluarsa;
-
-            await existingBatch.save();
-
-            return existingBatch;
-        }));
+        })
 
         res.status(200).json({
             status: 200,
             message: "Batch obat updated successfully",
-            data: result
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
