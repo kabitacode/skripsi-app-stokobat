@@ -51,16 +51,16 @@ export default function DashboardLayout({ children }: any) {
 
    const handleLogout = async () => {
       if (!user?.token) return;
-      
+
       try {
          await logout(user?.token);
          clearUser();
          router.push('/');
       } catch (error: any) {
          setError(error.response?.data?.message || error.message);
-       } finally {
+      } finally {
          setLoading(false);
-       }
+      }
    }
 
    return (
@@ -124,6 +124,28 @@ export default function DashboardLayout({ children }: any) {
                   <li className={`py-1 ${activeLink === '/kategori' || activeLink === '/kategori/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                      <Link href="/kategori" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
                         <span className={`py-1 ${activeLink === '/kategori' || activeLink === '/kategori/add' ? 'text-white ml-3' : 'ml-3'}`}>Kategori Obat</span>
+                     </Link>
+                  </li>
+                  <li className={`py-1 ${activeLink === '/batch' || activeLink === '/batch/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
+                     <Link href="/batch" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                        <span className={`py-1 ${activeLink === '/batch' || activeLink === '/batch/add' ? 'text-white ml-3' : 'ml-3'}`}>Batch Obat</span>
+                     </Link>
+                  </li>
+                  {
+                     user?.role == "Admin" ?
+                        <li className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/transaksi' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
+                           <Link href="/penjualan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                              <span className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/transaksi' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
+                           </Link>
+                        </li> : <li className={`py-1 ${activeLink === '/keuangan' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
+                           <Link href="/keuangan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                              <span className={`py-1 ${activeLink === '/keuangan' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
+                           </Link>
+                        </li>
+                  }
+                  <li className={`py-1 ${activeLink === '/laporan' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
+                     <Link href="/laporan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                        <span className={`py-1 ${activeLink === '/laporan' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
                      </Link>
                   </li>
                </ul>
