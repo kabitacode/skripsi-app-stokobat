@@ -34,7 +34,7 @@ Content-Type: application/json
 ###
 GET  http://localhost:5000/api/dashboard
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTAzODY4LCJleHAiOjE3MjA3MDg2Njh9.dhVlVu9a64J4O3T1L-iB-9FnvDRoPwf_VpZ_6GcpXvs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTYzMDgxLCJleHAiOjE3MjA3Njc4ODF9.uf4Ww6NIQIviR6V5YWe9m7XnWhw-dL2lu226xnQe6Yw
 
 ###
 GET  http://localhost:5000/api/me
@@ -89,7 +89,7 @@ Content-Type: application/json
 ###
 GET  http://localhost:5000/api/obat
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMDc2NjE1LCJleHAiOjE3MjA2ODE0MTV9.G5nI7Cf2uzcXc7iYdpxSKASmGr2hG6fPGV6QoGOtS3A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTYzMDgxLCJleHAiOjE3MjA3Njc4ODF9.uf4Ww6NIQIviR6V5YWe9m7XnWhw-dL2lu226xnQe6Yw
 
 ###
 GET  http://localhost:5000/obat/3
