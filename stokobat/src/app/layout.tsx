@@ -8,6 +8,9 @@ import { useRouter } from 'next/navigation';
 import useStore, { User } from '@/store/useStore'
 import { Toaster } from "react-hot-toast";
 import { Close } from "@mui/icons-material";
+import 'dayjs/locale/id';
+import dayjs, { Dayjs } from 'dayjs';
+
 
 
 const roboto = Roboto({
@@ -23,6 +26,8 @@ export default function RootLayout({
 }>) {
   const router = useRouter();
   const { user, setUser } = useStore();
+
+  dayjs.locale('id');
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');

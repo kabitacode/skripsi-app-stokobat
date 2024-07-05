@@ -2,6 +2,7 @@ import {fetchUsers, fetchUsersId, fetchUsersAdd, fetchUsersEdit, fetchUsersDelet
 import {fetchObat, fetchObatId, fetchObatAdd, fetchObatEdit, fetchObatDelete} from '@/services/obat';
 import {fetchKategori, fetchKategoriId, fetchKategoriAdd, fetchKategoriEdit, fetchKategoriDelete} from '@/services/kategori';
 import {fetchDashboard} from '@/services/dashboard';
+import {fetchBatch, fetchBatchId, fetchBatchAdd, fetchBatchEdit, fetchBatchDelete} from '@/services/batch';
 import {login, logout} from '@/services/auth';
 import {api} from '@/services/api';
 
@@ -29,5 +30,11 @@ export {
     fetchKategoriAdd,
     fetchKategoriEdit,
     fetchKategoriDelete,
+
+    fetchBatch,
+    fetchBatchId,
+    fetchBatchAdd,
+    fetchBatchEdit,
+    fetchBatchDelete
 }
 
