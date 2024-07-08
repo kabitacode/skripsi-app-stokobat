@@ -21,52 +21,59 @@ export const getPenjualan = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+export const getObatByKategori = async (req, res) => {
+    const { id } = req.params;
 
-
-async function getObatFEFO(jumlah, id_kategori) {
     try {
-        const today = new Date().toISOString().split('T')[0]; // Tanggal hari ini dalam format DATEONLY
+        const today = new Date().toISOString().split('T')[0];
 
-        // Cari obat yang memiliki kategori yang sama, stok mencukupi, dan belum kadaluarsa
-        const obat = await ObatModel.findOne({
+        const obatList = await ObatModel.findAll({
             where: {
-                id_kategori: id_kategori,
+                id_kategori: id,
                 stok: {
                     [Op.gt]: 0 // Ambil obat yang stoknya lebih dari 0
                 },
-                // tanggal_kadaluarsa: {
-                //     [Op.gt]: today // Hanya obat yang tanggal kadaluarsanya lebih besar dari hari ini
-                // }
+                tanggal_kadaluarsa: {
+                    [Op.lt]: today // Hanya batch yang belum kadaluarsa
+                }
             },
             include: {
                 model: BatchObatModel,
                 where: {
-                    status_kadaluarsa: {
-                        [Op.ne]: 'Kadaluarsa' // Batch tidak boleh dalam status kadaluarsa
-                    }
+                    status_kadaluarsa: 'Tidak Kadaluarsa',
                 },
-                required: true // Memastikan ada setidaknya satu batch yang memenuhi kriteria
+                required: true // Pastikan obat hanya diambil jika memiliki batch yang valid
             },
             order: [
-                ['tanggal_kadaluarsa', 'ASC'] // Urutkan berdasarkan tanggal kadaluarsa untuk FEFO
+                ['tanggal_kadaluarsa', 'DESC'] // Urutkan berdasarkan tanggal kadaluarsa batch untuk FEFO
             ]
         });
 
-        return obat;
+        res.status(200).json({
+            status: 200,
+            message: "success",
+            data: obatList
+        });
     } catch (error) {
-        throw new Error(`Error saat mencari obat dengan metode FEFO: ${error.message}`);
+        res.status(500).json({ message: error.message });
     }
-}
-
+};
              
 
 
 export const createPenjualan = async (req, res) => {
-    const { jumlah, tanggal_transaksi, id_kategori } = req.body;
+    const { jumlah, tanggal_transaksi, id_obat } = req.body;
 
     try {
-        // Cari obat berdasarkan kategori dengan metode FEFO
-        const obat = await getObatFEFO(jumlah, id_kategori);
+        // Cari obat berdasarkan id_obat yang dipilih klien
+        const obat = await ObatModel.findOne({
+            where: {
+                id: id_obat,
+                stok: {
+                    [Op.gte]: jumlah // Pastikan stok mencukupi
+                }
+            }
+        });
 
         // Jika obat tidak ditemukan atau stok tidak mencukupi, kirim error
         if (!obat) {
@@ -85,7 +92,7 @@ export const createPenjualan = async (req, res) => {
             jumlah,
             total_harga,
             tanggal_transaksi,
-            id_obat: obat.id
+            id_obat: obat.id // Pastikan ID obat yang dipilih digunakan di sini
         });
 
         res.status(201).json({

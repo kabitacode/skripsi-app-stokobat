@@ -5,12 +5,22 @@ import UserModel from '../models/UserModel.js';
 
 export const getObat = async (req, res) => {
     try {
+        const today = new Date().toISOString().split('T')[0];
         const result = await ObatModel.findAll({
             include: [
                 { model: KategoriModel },
                 { model: UserModel, attributes: ['id', 'name', 'email', 'role'] }
+            ],
+            where: {
+                tanggal_kadaluarsa: {
+                    [Op.lt]: today
+                }
+            },
+            order: [
+                ['tanggal_kadaluarsa', 'DESC']
             ]
         });
+       
         res.status(200).json({
             status: 200,
             message: "success",

@@ -5,7 +5,10 @@ import ObatModel from '../models/ObatModel.js';
 export const getBatch = async (req, res) => {
     try {
         const result = await BatchObatModel.findAll({
-            include: ObatModel
+            include: ObatModel,
+            order: [
+                [{model: ObatModel, as: 'obat'},'tanggal_kadaluarsa', 'DESC']
+            ]
         });
         res.status(200).json({
             status: 200,
@@ -45,7 +48,8 @@ export const createBatch = async (req, res) => {
             throw new Error(`Obat dengan id ${id_obat} tidak ditemukan.`);
         }
 
-        const status_kadaluarsa = tanggal_produksi > obat.tanggal_kadaluarsa ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
+        const today = new Date().toISOString().split('T')[0]; 
+        const status_kadaluarsa = obat.tanggal_kadaluarsa < today ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
 
         const result = await BatchObatModel.create({
             id_obat: id_obat,
@@ -84,8 +88,9 @@ export const updateBatch = async (req, res) => {
             throw new Error(`Obat dengan id ${id_obat} tidak ditemukan.`);
         }
 
-        const status_kadaluarsa = tanggal_produksi > obat.tanggal_kadaluarsa ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
-
+        const today = new Date().toISOString().split('T')[0]; 
+        const status_kadaluarsa = obat.tanggal_kadaluarsa < today ? 'Kadaluarsa' : 'Tidak Kadaluarsa';
+        
         await BatchObatModel.update({
             id_obat: id_obat,
             tanggal_produksi: tanggal_produksi,
