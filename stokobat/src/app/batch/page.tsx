@@ -137,7 +137,7 @@ const Page: React.FC = () => {
                             <TableRow key={item.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{item.status_kadaluarsa}</TableCell>
-                                <TableCell>{formattedDate(item.obat.tanggal_produksi)}</TableCell>
+                                <TableCell>{formattedDate(item.tanggal_produksi)}</TableCell>
                                 <TableCell>{item.obat.nama_obat}</TableCell>
                                 <TableCell>{formattedDate(item.obat.tanggal_kadaluarsa)}</TableCell>
                                 <TableCell>

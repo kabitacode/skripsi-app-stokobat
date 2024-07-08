@@ -6,7 +6,7 @@ import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchObat, fetchObatDelete } from '@/services';
+import { fetchPenjualan, fetchPenjualanDelete } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField } from '@mui/material';
 import { toast } from 'react-hot-toast';
@@ -30,10 +30,10 @@ const Page: React.FC = () => {
         if (!user || !user.token) return;
 
         try {
-            const apiData = await fetchObat(user?.token);
+            const apiData = await fetchPenjualan(user?.token);
             setData(apiData.data);
             console.log(apiData);
-            
+
             setLoading(false);
 
         } catch (error: any) {
@@ -56,15 +56,12 @@ const Page: React.FC = () => {
         setPage(0); // Reset page to 0
     };
 
-    const handleEdit = (id: string) => {
-        router.push(`/obat/edit/${id}`);
-    };
 
     const handleDelete = async (id: string) => {
         if (!user || !user.token) return;
 
         try {
-            const apiData = await fetchObatDelete(user?.token, id);
+            const apiData = await fetchPenjualanDelete(user?.token, id);
             toast.success(apiData.message || "Data berhasil Dihapus!");
             fetchData();
             setLoading(false);
@@ -81,7 +78,7 @@ const Page: React.FC = () => {
     };
 
     const filteredData = data.filter(item =>
-        item.nama_obat.toLowerCase().includes(searchQuery.toLowerCase())
+        item.obat.nama_obat.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const formattedDate = (dateString: string) => {
@@ -90,15 +87,15 @@ const Page: React.FC = () => {
 
     return (
         <DashboardLayout>
-              {
+            {
                 loading && <CircularProgress />
             }
 
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
-                <h1 className="text-2xl font-semibold">Data Obat</h1>
+                <h1 className="text-2xl font-semibold">Data Penjualan</h1>
 
                 <div className="">
-                    <Link href={'/obat/add'}>
+                    <Link href={'/penjualan/add'}>
                         <CustomButton startIcon={<Add />}>
                             Tambah
                         </CustomButton>
@@ -122,11 +119,9 @@ const Page: React.FC = () => {
                         <TableRow>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Kadaluarsa</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Uploader</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Jumlah</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Total Harga</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Transaksi</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -134,25 +129,12 @@ const Page: React.FC = () => {
                         {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
                             <TableRow key={item.id}>
                                 <TableCell>{index + 1}</TableCell>
-                                <TableCell>{item.nama_obat}</TableCell>
-                                <TableCell>{item.kategori.nama}</TableCell>
-                                <TableCell>{item.stok}</TableCell>
-                                <TableCell>{item.harga}</TableCell>
-                                <TableCell>{formattedDate(item.tanggal_kadaluarsa)}</TableCell>
-                                <TableCell>{item.user.name} | {item.user.role}</TableCell>
+                                <TableCell>{item.obat.nama_obat}</TableCell>
+                                <TableCell>{item.jumlah}</TableCell>
+                                <TableCell>{item.total_harga}</TableCell>
+                                <TableCell>{formattedDate(item.tanggal_transaksi)}</TableCell>
                                 <TableCell>
                                     <div className='flex flex-row justify-center'>
-                                        <div className='mr-2'>
-                                            <ButtonCustom
-                                                color='success'
-                                                onClick={() => handleEdit(item.id)}
-                                                fontSize="0.75rem"
-                                                textTransform="none"
-                                                variant='outlined'
-                                            >
-                                                Edit
-                                            </ButtonCustom>
-                                        </div>
                                         <div>
                                             <ButtonCustom
                                                 color="error"

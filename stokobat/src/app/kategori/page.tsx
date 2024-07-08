@@ -31,7 +31,7 @@ const Page: React.FC = () => {
 
         try {
             const apiData = await fetchKategori(user?.token);
-            setData(apiData.data);
+            setData(apiData.data);  
             setLoading(false);
 
         } catch (error: any) {

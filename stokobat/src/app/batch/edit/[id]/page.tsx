@@ -62,10 +62,9 @@ const Page: React.FC<FormData> = () => {
 
         try {
             const response = await fetchObat(user?.token);
-            const result = response.data;
-
-
+            const result = response.data;     
             setData(result);
+            
             setLoading(false);
 
         } catch (error: any) {
@@ -84,6 +83,8 @@ const Page: React.FC<FormData> = () => {
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         if (!user || !user.token) return;
         setLoading(true);
+        console.log(data);
+        
         try {
             const postData = {
                 tanggal_produksi: tanggal?.format('YYYY-MM-DD'),
@@ -106,10 +107,6 @@ const Page: React.FC<FormData> = () => {
 
     return (
         <DashboardLayout>
-            {
-                loading && <CircularProgress />
-            }
-
             <div className="flex flex-row mt-4 ml-4 mr-4 mb-10">
                 <IconButton onClick={() => router.back()}>
                     <ArrowBack />
@@ -172,6 +169,11 @@ const Page: React.FC<FormData> = () => {
                     </div>
                 </form>
             </div>
+
+            {
+                loading && <CircularProgress />
+            }
+            
         </DashboardLayout>
     );
 };
