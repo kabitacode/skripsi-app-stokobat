@@ -126,11 +126,11 @@ export default function DashboardLayout({ children }: any) {
                         <span className={`py-1 ${activeLink === '/kategori' || activeLink === '/kategori/add' ? 'text-white ml-3' : 'ml-3'}`}>Kategori Obat</span>
                      </Link>
                   </li>
-                  <li className={`py-1 ${activeLink === '/batch' || activeLink === '/batch/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
+                  {/* <li className={`py-1 ${activeLink === '/batch' || activeLink === '/batch/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                      <Link href="/batch" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
                         <span className={`py-1 ${activeLink === '/batch' || activeLink === '/batch/add' ? 'text-white ml-3' : 'ml-3'}`}>Batch Obat</span>
                      </Link>
-                  </li>
+                  </li> */}
                   {
                      user?.role == "Admin" ?
                         <li className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>

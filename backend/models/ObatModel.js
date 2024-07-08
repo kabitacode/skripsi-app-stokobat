@@ -40,6 +40,10 @@ const ObatModel = db.define('obat', {
             notEmpty: true,
         }
     },
+    status_kadaluarsa: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

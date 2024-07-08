@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/api/users', verifyUser, adminOnly, getUser);
 router.get('/api/users/:id', verifyUser, adminOnly, getUserById);
-router.post('/api/users', verifyUser, adminOnly, createUser);
+router.post('/api/users', createUser);
 router.patch('/api/users/:id', verifyUser, adminOnly, updateUser);
 router.delete('/api/users/:id', verifyUser, adminOnly, deleteUser);
 

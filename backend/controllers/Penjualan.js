@@ -1,73 +1,17 @@
 import PenjualanModel from '../models/PenjualanModel.js';
 import ObatModel from '../models/ObatModel.js';
 import { Sequelize, Op } from 'sequelize';
-import BatchObatModel from '../models/BatchObatModel.js';
 import KategoriModel from '../models/KategoriModel.js';
 
-export const getPenjualan = async (req, res) => {
-    try {
-        const penjualan = await PenjualanModel.findAll({
-            include: [{
-                model: ObatModel,
-                attributes: ['nama_obat', 'stok', 'harga', 'tanggal_kadaluarsa']
-            }]
-        });
-        res.status(200).json({
-            status: 200,
-            message: "success",
-            data: penjualan
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-export const getObatByKategori = async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const today = new Date().toISOString().split('T')[0];
-
-        const obatList = await ObatModel.findAll({
-            where: {
-                id_kategori: id,
-                stok: {
-                    [Op.gt]: 0 // Ambil obat yang stoknya lebih dari 0
-                },
-                tanggal_kadaluarsa: {
-                    [Op.lt]: today // Hanya batch yang belum kadaluarsa
-                }
-            },
-            include: {
-                model: BatchObatModel,
-                where: {
-                    status_kadaluarsa: 'Tidak Kadaluarsa',
-                },
-                required: true // Pastikan obat hanya diambil jika memiliki batch yang valid
-            },
-            order: [
-                ['tanggal_kadaluarsa', 'DESC'] // Urutkan berdasarkan tanggal kadaluarsa batch untuk FEFO
-            ]
-        });
-
-        res.status(200).json({
-            status: 200,
-            message: "success",
-            data: obatList
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-             
-
-
+// Penjualan dengan metode FEFO
 export const createPenjualan = async (req, res) => {
-    const { jumlah, tanggal_transaksi, id_obat } = req.body;
+    const { jumlah, tanggal_transaksi, id_obat, id_kategori } = req.body;
 
     try {
-        // Cari obat berdasarkan id_obat yang dipilih klien
+        // Cari obat berdasarkan ID yang dipilih oleh user
         const obat = await ObatModel.findOne({
             where: {
+                id_kategori: id_kategori,
                 id: id_obat,
                 stok: {
                     [Op.gte]: jumlah // Pastikan stok mencukupi
@@ -79,6 +23,7 @@ export const createPenjualan = async (req, res) => {
         if (!obat) {
             return res.status(404).json({ message: "Obat tidak ditemukan atau stok tidak mencukupi!" });
         }
+
 
         // Hitung total harga
         const total_harga = obat.harga * jumlah;
@@ -104,6 +49,55 @@ export const createPenjualan = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// Mendapatkan Obat Berdasarkan Kategori dengan Metode FEFO
+export const getObatByKategori = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const today = new Date().toISOString().split('T')[0];
+
+        const obatList = await ObatModel.findAll({
+            where: {
+                id_kategori: id,
+                stok: {
+                    [Op.gt]: 0 // Ambil obat yang stoknya lebih dari 0
+                }
+            },
+            order: [
+                ['tanggal_kadaluarsa', 'ASC'] // Urutkan berdasarkan tanggal kadaluarsa yang mendekati
+            ]
+        });
+
+        res.status(200).json({
+            status: 200,
+            message: "success",
+            data: obatList
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Mendapatkan Semua Penjualan
+export const getPenjualan = async (req, res) => {
+    try {
+        const penjualan = await PenjualanModel.findAll({
+            include: [{
+                model: ObatModel,
+                attributes: ['nama_obat', 'stok', 'harga', 'tanggal_kadaluarsa']
+            }]
+        });
+        res.status(200).json({
+            status: 200,
+            message: "success",
+            data: penjualan
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 
 export const deletePenjualan = async (req, res) => {
     try {

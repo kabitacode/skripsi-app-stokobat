@@ -1,15 +1,9 @@
 import ObatModel from "../models/ObatModel.js";
-import BatchObatModel from "../models/BatchObatModel.js";
-import { Op } from 'sequelize';
 
 export const getData = async (req, res) => {
     try {
         // Mendapatkan semua obat
-        const allObat = await ObatModel.findAll({
-            include: [{
-                model: BatchObatModel
-            }]
-        });
+        const allObat = await ObatModel.findAll();
 
         // Menghitung total stok, obat kedaluwarsa, dan obat mendekati kedaluwarsa
         let totalStok = 0;
@@ -22,13 +16,11 @@ export const getData = async (req, res) => {
 
         allObat.forEach(obat => {
             totalStok += obat.stok;
-            obat.batch_obats.forEach(batch => {
-                if (batch.tanggal_produksi > obat.tanggal_kadaluarsa) {
-                    totalKadaluarsa++;
-                } else if (batch.tanggal_produksi <= oneMonthLater && batch.tanggal_produksi >= currentDate) {
-                    totalMendekatiKadaluarsa++;
-                }
-            });
+            if (new Date(obat.tanggal_kadaluarsa) < currentDate) {
+                totalKadaluarsa++;
+            } else if (new Date(obat.tanggal_kadaluarsa) <= oneMonthLater) {
+                totalMendekatiKadaluarsa++;
+            }
         });
 
         res.status(200).json({

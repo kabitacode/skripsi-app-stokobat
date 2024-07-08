@@ -11,13 +11,8 @@ export const getObat = async (req, res) => {
                 { model: KategoriModel },
                 { model: UserModel, attributes: ['id', 'name', 'email', 'role'] }
             ],
-            where: {
-                tanggal_kadaluarsa: {
-                    [Op.lt]: today
-                }
-            },
             order: [
-                ['tanggal_kadaluarsa', 'DESC']
+                ['tanggal_kadaluarsa', 'ASC']
             ]
         });
        
@@ -57,13 +52,20 @@ export const createObat = async (req, res) => {
     const { nama_obat, stok, harga, tanggal_kadaluarsa, id_kategori } = req.body;
     const user_id = req.userId;
     try {
+        const today = new Date().toISOString().split('T')[0];
+        let status_kadaluarsa = 'Tidak Kadaluarsa';
+        if (tanggal_kadaluarsa < today) {
+            status_kadaluarsa = 'Kadaluarsa';
+        }
+
         const result = await ObatModel.create({
-            nama_obat: nama_obat,
-            stok: stok,
-            harga: harga,
-            tanggal_kadaluarsa: tanggal_kadaluarsa,
-            id_kategori: id_kategori,
-            user_id: user_id
+            nama_obat,
+            stok,
+            harga,
+            tanggal_kadaluarsa,
+            status_kadaluarsa,
+            id_kategori,
+            user_id
         });
         res.status(201).json({
             status: 201,
@@ -79,6 +81,12 @@ export const updateObat = async (req, res) => {
     const { nama_obat, stok, harga, tanggal_kadaluarsa, id_kategori } = req.body;
     const user_id = req.userId;
     try {
+        const today = new Date().toISOString().split('T')[0];
+        let status_kadaluarsa = 'Tidak Kadaluarsa';
+        if (tanggal_kadaluarsa < today) {
+            status_kadaluarsa = 'Kadaluarsa';
+        }
+
         const user = await ObatModel.findOne({
             where: {
                 id: req.params.id
@@ -91,6 +99,7 @@ export const updateObat = async (req, res) => {
             stok: stok,
             harga: harga,
             tanggal_kadaluarsa: tanggal_kadaluarsa,
+            status_kadaluarsa,
             id_kategori: id_kategori,
             user_id: user_id
         }, {
