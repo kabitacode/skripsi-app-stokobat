@@ -15,7 +15,7 @@ export const getLaporan = async (req, res) => {
                     [Op.lt]: today
                 }
             },
-            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa']
+            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa'] // Ambil atribut tanggal_kadaluarsa
         });
 
         // Dapatkan obat yang mendekati kadaluarsa (dalam waktu 1 bulan)
@@ -25,20 +25,20 @@ export const getLaporan = async (req, res) => {
                     [Op.between]: [today, oneMonthLater]
                 }
             },
-            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa']
+            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa'] // Ambil atribut tanggal_kadaluarsa
         });
 
         // Membuat data untuk diekspor ke Excel
         const dataKadaluarsa = kadaluarsaObat.map(obat => ({
             'Nama Obat': obat.nama_obat,
             'Stok': obat.stok,
-            'Tanggal Kadaluarsa': obat.tanggal_kadaluarsa.toISOString().split('T')[0]
+            'Tanggal Kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0] // Pastikan tanggal_kadaluarsa diubah ke objek Date
         }));
 
         const dataMendekatiKadaluarsa = mendekatiKadaluarsaObat.map(obat => ({
             'Nama Obat': obat.nama_obat,
             'Stok': obat.stok,
-            'Tanggal Kadaluarsa': obat.tanggal_kadaluarsa.toISOString().split('T')[0]
+            'Tanggal Kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0] // Pastikan tanggal_kadaluarsa diubah ke objek Date
         }));
 
         const wb = xlsx.utils.book_new();
@@ -58,5 +58,3 @@ export const getLaporan = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
-
-export default router;
