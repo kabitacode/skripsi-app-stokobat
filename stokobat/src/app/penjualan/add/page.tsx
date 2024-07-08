@@ -6,7 +6,7 @@ import DashboardLayout from "../../dashboard/layout";
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { TextField, Button, IconButton, FormControl, InputLabel, Select, MenuItem } from '@mui/material'; // Import komponen TextField dari Material-UI
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchBatchAdd, fetchObat } from '@/services';
+import { fetchPenjualanById, fetchKategori, fetchPenjualanAdd } from '@/services';
 import useStore from '@/store/useStore';
 import { ArrowBack } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
@@ -19,12 +19,18 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 interface FormData {
     id: string;
-    tanggal_produksi: Dayjs | null;
+    tanggal_transaksi: Dayjs | null;
     nama_obat: string;
+    kategori: string;
 }
 
 
 interface dataResponse {
+    id: string;
+    nama: string;
+}
+
+interface dataResponseObat {
     id: string;
     nama_obat: string;
 }
@@ -33,18 +39,22 @@ const Page: React.FC<FormData> = () => {
     const { register, handleSubmit, reset, control, setValue, formState: { errors } } = useForm<FormData>();
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<dataResponse[]>([]);
+    const [dataObat, setDataObat] = useState<dataResponseObat[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [tanggal, setTanggal] = useState<Dayjs | null>(dayjs());
+    const [selectedKategori, setSelectedKategori] = useState<string>("");
+
 
     const router = useRouter();
     const { user } = useStore();
 
 
-    const fetchData = async () => {
+
+    const fetchDataKategori = async () => {
         if (!user || !user.token) return;
 
         try {
-            const response = await fetchObat(user?.token);
+            const response = await fetchKategori(user?.token);
             const result = response.data;
 
 
@@ -58,8 +68,27 @@ const Page: React.FC<FormData> = () => {
         }
     };
 
+    const fetchDataObat = async (id: string) => {
+        if (!user || !user.token) return;
+
+        try {
+            const response = await fetchPenjualanById(id, user?.token);
+            const result = response.data;
+            
+            setDataObat(result);
+            setLoading(false);
+
+            router.back();
+
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        fetchData();
+        fetchDataKategori();
     }, [user]);
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
@@ -68,9 +97,9 @@ const Page: React.FC<FormData> = () => {
         try {
             const postData = {
                 id_obat: data.nama_obat,
-                tanggal_produksi: data.tanggal_produksi,
+                tanggal_transaksi: data.tanggal_transaksi,
             };
-            const response = await fetchBatchAdd(user?.token, postData);
+            const response = await fetchPenjualanAdd(user?.token, postData);
             toast.success(response.message || "Data berhasil Ditambahkan!");
             reset();
         } catch (error: any) {
@@ -80,13 +109,23 @@ const Page: React.FC<FormData> = () => {
         }
     };
 
+    const handleKategoriChange = async (value: any) => {
+        setSelectedKategori(value); 
+        setValue('kategori', value); 
+        if (value) {
+            await fetchDataObat(value); 
+        } else {
+            setDataObat([]); 
+        }
+    };
+
     return (
         <DashboardLayout>
             <div className="flex flex-row mt-4 ml-4 mr-4 mb-10">
                 <IconButton onClick={() => router.back()}>
                     <ArrowBack />
                 </IconButton>
-                <h1 className="text-2xl font-semibold mt-1 ml-2">Tambah Data Batch</h1>
+                <h1 className="text-2xl font-semibold mt-1 ml-2">Tambah Data Penjualan</h1>
             </div>
 
             <div className='ml-7'>
@@ -94,11 +133,11 @@ const Page: React.FC<FormData> = () => {
                     <div className="w-1/3 mb-5">
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
-                                label="Tanggal Produksi"
+                                label="Tanggal Transaksi"
                                 value={tanggal}
                                 onChange={(newValue) => {
                                     setTanggal(newValue);
-                                    setValue('tanggal_produksi', newValue, { shouldValidate: true });
+                                    setValue('tanggal_transaksi', newValue, { shouldValidate: true });
                                 }}
                             />
                         </LocalizationProvider>
@@ -106,22 +145,25 @@ const Page: React.FC<FormData> = () => {
 
                     <div className="w-1/3 mb-5">
                         <FormControl fullWidth error={!!errors.nama_obat}>
-                            <InputLabel id="obat-label">Nama Obat</InputLabel>
+                            <InputLabel id="obat-label">Kategori</InputLabel>
                             <Controller
-                                name="nama_obat"
+                                name="kategori"
                                 control={control}
                                 defaultValue=""
-                                rules={{ required: "Nama Obat is required" }}
+                                rules={{ required: "Kategori is required" }}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <Select
-                                        labelId="obat-label"
-                                        id="obat"
+                                        labelId="kategori-label"
+                                        id="kategori"
                                         value={value}
-                                        label="Nama Obat"
-                                        onChange={onChange}
+                                        label="Kategori"
+                                        onChange={(e) => {
+                                            onChange(e.target.value);
+                                            handleKategoriChange(e.target.value); // Panggil fungsi saat kategori berubah
+                                        }}
                                     >
                                         {data.map((item) => (
-                                            <MenuItem key={item.id} value={item.id}>{item.nama_obat}</MenuItem>
+                                            <MenuItem key={item.id} value={item.id}>{item.nama}</MenuItem>
                                         ))}
                                     </Select>
                                 )}
@@ -129,6 +171,34 @@ const Page: React.FC<FormData> = () => {
                             {errors.nama_obat && <p className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained mui-1wc848c-MuiFormHelperText-root" id="kategori">{errors.nama_obat.message}</p>}
                         </FormControl>
                     </div>
+
+                    {
+                        selectedKategori ? <div className="w-1/3 mb-5">
+                            <FormControl fullWidth error={!!errors.nama_obat}>
+                                <InputLabel id="obat-label">Nama Obat</InputLabel>
+                                <Controller
+                                    name="nama_obat"
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{ required: "Nama Obat is required" }}
+                                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                        <Select
+                                            labelId="obat-label"
+                                            id="obat"
+                                            value={value}
+                                            label="Nama Obat"
+                                            onChange={onChange}
+                                        >
+                                            {dataObat.map((item) => (
+                                                <MenuItem key={item.id} value={item.id}>{item.nama_obat}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    )}
+                                />
+                                {errors.nama_obat && <p className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained mui-1wc848c-MuiFormHelperText-root" id="kategori">{errors.nama_obat.message}</p>}
+                            </FormControl>
+                        </div> : null
+                    }
 
                     <div className="mt-8">
                         <Button

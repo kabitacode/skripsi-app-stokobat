@@ -164,12 +164,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6I
 
 {
     "jumlah": 2,
-    "tanggal_transaksi": "2024-07-07",
-    "id_kategori": 8
+    "tanggal_transaksi": "2024-07-08",
+    "id_obat": 6
 }
 
 ###
-GET  http://localhost:5000/api/penjualan
+GET  http://localhost:5000/api/penjualan/6
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTA1MTg5LCJleHAiOjE3MjA3MDk5ODl9.mYc7MgL3ZwGjoEQG94jBFcNXkMmbsn3artx3WKkd4OA
 

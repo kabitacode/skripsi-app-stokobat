@@ -35,7 +35,7 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 mt-5">
       {
         error && <div className="mb-10 flex items-center justify-center">
           <Alert severity="error">
@@ -44,7 +44,7 @@ const Page: React.FC = () => {
           </Alert>
         </div>
       }
-      <form onSubmit={handleSubmit(handleLogin)} className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-md">
+      <form onSubmit={handleSubmit(handleLogin)} className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-lg">
         <div className="flex items-center justify-center mb-10">
           <AccountCircle sx={{ fontSize: 70 }} />
         </div>

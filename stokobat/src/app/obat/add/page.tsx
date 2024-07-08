@@ -75,6 +75,7 @@ const Page: React.FC = () => {
             toast.success(response.message || "Data berhasil Ditambahkan!");
             reset();
             setTanggal(dayjs());
+            router.back();
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
         } finally {
@@ -138,6 +139,7 @@ const Page: React.FC = () => {
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DatePicker
                                     label="Tanggal Kadaluarsa"
+                                    minDate={dayjs()}
                                     value={tanggal}
                                     onChange={(newValue) => {
                                         setTanggal(newValue);

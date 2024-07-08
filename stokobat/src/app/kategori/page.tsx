@@ -26,14 +26,15 @@ const Page: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
 
 
-    const fetchDataUsers = async () => {
+    const fetchData = async () => {
         if (!user || !user.token) return;
 
         try {
             const apiData = await fetchKategori(user?.token);
             setData(apiData.data);  
             setLoading(false);
-
+            console.log(apiData);
+            
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
         } finally {
@@ -42,7 +43,7 @@ const Page: React.FC = () => {
     };
 
     useEffect(() => {
-        fetchDataUsers();
+        fetchData();
     }, [user]);
 
     const handleChangePage = (event: unknown, newPage: number) => {
@@ -64,7 +65,7 @@ const Page: React.FC = () => {
         try {
             const apiData = await fetchKategoriDelete(user?.token, id);
             toast.success(apiData.message || "Data berhasil Dihapus!");
-            fetchDataUsers();
+            fetchData();
             setLoading(false);
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);

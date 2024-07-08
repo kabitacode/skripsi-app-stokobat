@@ -15,6 +15,22 @@ export const fetchPenjualan = async (token: string) => {
   };
 
 
+  
+  export const fetchPenjualanById = async (id: string, token: string) => {
+    try {
+      const response = await api.get(`penjualan/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
   export const fetchPenjualanAdd = async (token: string, postData: any) => {
     try {
       const response = await api.post('/penjualan', postData, {
