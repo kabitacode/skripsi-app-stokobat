@@ -73,3 +73,17 @@ export const fetchPenjualan = async (token: string) => {
       throw error;
     }
   };
+
+  export const fetchPenjualanEdit = async (token: string, id: string) => {
+    try {
+      const response = await api.put(`penjualan/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };

@@ -85,6 +85,10 @@ const Page: React.FC = () => {
         return dayjs(dateString).format('DD MMMM YYYY');
     };
 
+    const handleEdit = (id: string) => {
+        router.push(`/penjualan/edit/${id}`);
+    };
+
     return (
         <DashboardLayout>
             {
@@ -135,6 +139,17 @@ const Page: React.FC = () => {
                                 <TableCell>{formattedDate(item.tanggal_transaksi)}</TableCell>
                                 <TableCell>
                                     <div className='flex flex-row justify-center'>
+                                        <div className='mr-2'>
+                                            <ButtonCustom
+                                                color='success'
+                                                onClick={() => handleEdit(item.id)}
+                                                fontSize="0.75rem"
+                                                textTransform="none"
+                                                variant='outlined'
+                                            >
+                                                Edit
+                                            </ButtonCustom>
+                                        </div>
                                         <div>
                                             <ButtonCustom
                                                 color="error"
