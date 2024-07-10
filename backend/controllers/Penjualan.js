@@ -125,10 +125,8 @@ export const getPenjualanById = async (req, res) => {
             },
             include: [{
                 model: ObatModel,
-                attributes: ['nama_obat', 'stok', 'harga', 'tanggal_kadaluarsa', 'status_kadaluarsa'],
                 include: {
-                    model: KategoriModel,
-                    attributes: ['nama']
+                    model: KategoriModel
                 }
             }]
         });
