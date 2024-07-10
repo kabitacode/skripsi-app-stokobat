@@ -35,7 +35,8 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 mt-5">
+   <div className="bg-blue-200 h-svh">
+     <div className="container mx-auto py-8 pt-24">
       {
         error && <div className="mb-10 flex items-center justify-center">
           <Alert severity="error">
@@ -83,6 +84,7 @@ const Page: React.FC = () => {
         </button>
       </form>
     </div>
+   </div>
   );
 }
 

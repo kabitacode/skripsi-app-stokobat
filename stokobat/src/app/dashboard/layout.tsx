@@ -9,7 +9,7 @@ import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Alert, AlertTitle, IconButton } from '@mui/material';
-import { AccountBox, Logout } from '@mui/icons-material';
+import { AccountBox, Category, Home, Logout, Medication, Report, Storefront } from '@mui/icons-material';
 import { StyledMenu } from '@/components';
 import { logout } from '@/services';
 import useStore from '@/store/useStore'
@@ -113,16 +113,19 @@ export default function DashboardLayout({ children }: any) {
                <ul className="space-y-2 font-medium">
                   <li className={`py-1 ${activeLink === '/dashboard' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                      <Link href="/dashboard" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                        <Home sx={{ color: activeLink === '/dashboard' ? 'white' : 'black' }} fontSize='small' />
                         <span className={`py-1 ${activeLink === '/dashboard' ? 'text-white ml-3' : 'ml-3'}`} >Home</span>
                      </Link>
                   </li>
                   <li className={`py-1 ${activeLink === '/obat' || activeLink === '/obat/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                      <Link href="/obat" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                        <Medication sx={{ color: activeLink === '/obat' || activeLink === '/obat/add' ? 'white' : 'black' }} fontSize='small' />
                         <span className={`py-1 ${activeLink === '/obat' || activeLink === '/obat/add' ? 'text-white ml-3' : 'ml-3'}`} >Daftar Obat</span>
                      </Link>
                   </li>
                   <li className={`py-1 ${activeLink === '/kategori' || activeLink === '/kategori/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                      <Link href="/kategori" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                        <Category sx={{ color: activeLink === '/kategori' || activeLink === '/kategori/add' ? 'white' : 'black' }} fontSize='small' />
                         <span className={`py-1 ${activeLink === '/kategori' || activeLink === '/kategori/add' ? 'text-white ml-3' : 'ml-3'}`}>Kategori Obat</span>
                      </Link>
                   </li>
@@ -135,6 +138,7 @@ export default function DashboardLayout({ children }: any) {
                      user?.role == "Admin" ?
                         <li className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                            <Link href="/penjualan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                              <Storefront sx={{ color: activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'white' : 'black' }} fontSize='small' />
                               <span className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
                            </Link>
                         </li> :
@@ -154,9 +158,11 @@ export default function DashboardLayout({ children }: any) {
                   }
                   <li className={`py-1 ${activeLink === '/laporan' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                      <Link href="/laporan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                        <Report sx={{ color: activeLink === '/laporan' ? 'white' : 'black' }} fontSize='small' />
                         <span className={`py-1 ${activeLink === '/laporan' ? 'text-white ml-3' : 'ml-3'}`}>Laporan</span>
                      </Link>
                   </li>
+
                </ul>
             </div>
          </aside>
