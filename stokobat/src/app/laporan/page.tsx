@@ -6,7 +6,7 @@ import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
 import { Add, ArrowDropDownCircle, Delete, Download, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchDataLaporan, fetchLaporanObat, fetchObat, fetchObatDelete } from '@/services';
+import { fetchDataLaporan, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanObat, fetchLaporanPenjualan, fetchObat, fetchObatDelete } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField, MenuItem, Menu, Fade, IconButton } from '@mui/material';
 import { toast } from 'react-hot-toast';
@@ -78,8 +78,18 @@ const Page: React.FC = () => {
         if (!user || !user.token) return;
 
         try {
-            const apiData = await fetchLaporanObat(user?.token);
+            let apiData;
 
+            if (isLaporanKey == "Penjualan") {
+                apiData = await fetchLaporanPenjualan(user?.token);
+            } else if (isLaporanKey == "Mendekati") {
+                apiData = await fetchLaporanMendekatiKadaluarsa(user?.token);
+            } else if (isLaporanKey == "Kadaluarsa") {
+                apiData = await fetchLaporanKadaluarsa(user?.token);
+            } else {
+                apiData = await fetchLaporanObat(user?.token);
+            }
+            
             toast.success(apiData.message || "Data berhasil Didownload!");
             fetchData();
             setLoading(false);
