@@ -1,5 +1,7 @@
 import { Op } from 'sequelize';
 import ObatModel from '../models/ObatModel.js';
+import PenjualanModel from '../models/PenjualanModel.js';
+import KategoriModel from '../models/KategoriModel.js';
 import xlsx from 'xlsx';
 
 export const getLaporan = async (req, res) => {
@@ -54,6 +56,86 @@ export const getLaporan = async (req, res) => {
         res.setHeader('Content-Disposition', 'attachment; filename=laporan_obat.xlsx');
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.send(buffer);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+export const getData = async (req, res) => {
+    try {
+        const today = new Date().toISOString().split('T')[0];
+        const oneMonthLater = new Date();
+        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+
+        // Dapatkan semua obat
+        const allObat = await ObatModel.findAll({
+            include: [
+                {
+                    model: KategoriModel
+                }
+            ]
+        });
+
+        // get all data penjualan with obat
+        const dataPenjualanModel = await PenjualanModel.findAll({
+            include: [
+                {
+                    model: ObatModel
+                }
+            ]
+        });
+
+        // Filter dan hitung obat yang sudah kadaluarsa dan mendekati kadaluarsa
+        const kadaluarsaObat = allObat.filter(obat => new Date(obat.tanggal_kadaluarsa) < today);
+        const mendekatiKadaluarsaObat = allObat.filter(obat => new Date(obat.tanggal_kadaluarsa) >= today && new Date(obat.tanggal_kadaluarsa) <= oneMonthLater);
+
+        const dataKadaluarsa = kadaluarsaObat.map(obat => ({
+            'nama_obat': obat.nama_obat,
+            'stok': obat.stok,
+            'kategori': obat.kategori.nama,
+            'harga': obat.harga,
+            'status_kadaluarsa': obat.status_kadaluarsa,
+            'tanggal_kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
+        }));
+
+        const dataMendekatiKadaluarsa = mendekatiKadaluarsaObat.map(obat => ({
+            'nama_obat': obat.nama_obat,
+            'stok': obat.stok,
+            'kategori': obat.kategori.nama,
+            'harga': obat.harga,
+            'status_kadaluarsa': obat.status_kadaluarsa,
+            'tanggal_kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
+        }));
+
+        // Menyiapkan data laporan lengkap
+        const dataLaporan = allObat.map(obat => ({
+            'nama_obat': obat.nama_obat,
+            'stok': obat.stok,
+            'kategori': obat.kategori.nama,
+            'harga': obat.harga,
+            'status_kadaluarsa': obat.status_kadaluarsa,
+            'tanggal_kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
+        }));
+
+        const dataPenjualan = dataPenjualanModel.map(transaksi => ({
+            'nama_obat': transaksi.obat.nama_obat,
+            'stok': transaksi.obat.stok,
+            'harga_obat': transaksi.obat.harga,
+            'jumlah': transaksi.jumlah,
+            'total_harga': transaksi.total_harga,
+            'tanggal_transaksi': new Date(transaksi.tanggal_transaksi).toISOString().split('T')[0]
+        }))
+
+        res.status(200).json({
+            status: 200,
+            message: "success",
+            data: {
+                kadaluarsa: dataKadaluarsa,
+                mendekatiKadaluarsa: dataMendekatiKadaluarsa,
+                laporan: dataLaporan,
+                penjualan: dataPenjualan
+            }
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
