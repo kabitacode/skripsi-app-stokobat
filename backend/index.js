@@ -13,6 +13,7 @@ import BatchRoute from './routes/BatchRoute.js';
 import PenjualanRoute from './routes/PenjualanRoute.js';
 import DashboardRoute from './routes/DashboardRoute.js';
 import LaporanRoute from './routes/LaporanRoute.js';
+import FefoRoute from './routes/FefoRoute.js';
 
 
 
@@ -51,6 +52,7 @@ app.use(BatchRoute);
 app.use(PenjualanRoute);
 app.use(DashboardRoute);
 app.use(LaporanRoute);
+app.use(FefoRoute);
 
 
 

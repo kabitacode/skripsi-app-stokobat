@@ -6,7 +6,7 @@ import DashboardLayout from "../../dashboard/layout";
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { TextField, Button, IconButton, FormControl, InputLabel, Select, MenuItem, TablePagination, TableHead, TableRow, TableBody, Table, TableCell } from '@mui/material';
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchPenjualanById, fetchKategori, fetchPenjualanAdd, fetchObat } from '@/services';
+import { fetchPenjualanById, fetchKategori, fetchPenjualanAdd, fetchObat, fetchPenjualanByKategori } from '@/services';
 import useStore from '@/store/useStore';
 import { ArrowBack } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
@@ -76,7 +76,7 @@ const Page: React.FC<FormData> = () => {
         if (!user || !user.token) return;
 
         try {
-            const response = await fetchPenjualanById(id, user?.token);
+            const response = await fetchPenjualanByKategori(id, user?.token);
             const result = response.data;
 
             setDataObat(result);

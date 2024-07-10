@@ -50,29 +50,97 @@ export const createPenjualan = async (req, res) => {
     }
 };
 
-// Mendapatkan Obat Berdasarkan Kategori dengan Metode FEFO
-export const getObatByKategori = async (req, res) => {
+export const updatePenjualan = async (req, res) => {
     const { id } = req.params;
+    const { jumlah, tanggal_transaksi, id_obat, id_kategori } = req.body;
 
     try {
-        const today = new Date().toISOString().split('T')[0];
-
-        const obatList = await ObatModel.findAll({
+        // Cari penjualan berdasarkan ID
+        const penjualan = await PenjualanModel.findOne({
             where: {
-                id_kategori: id,
+                id: id
+            }
+        });
+
+        if (!penjualan) {
+            return res.status(404).json({ message: "Penjualan tidak ditemukan!" });
+        }
+
+        // Cari obat berdasarkan ID yang dipilih oleh user
+        const obat = await ObatModel.findOne({
+            where: {
+                id_kategori: id_kategori,
+                id: id_obat,
                 stok: {
-                    [Op.gt]: 0 // Ambil obat yang stoknya lebih dari 0
+                    [Op.gte]: jumlah // Pastikan stok mencukupi
                 }
-            },
-            order: [
-                ['tanggal_kadaluarsa', 'ASC'] // Urutkan berdasarkan tanggal kadaluarsa yang mendekati
-            ]
+            }
+        });
+
+        if (!obat) {
+            return res.status(404).json({ message: "Obat tidak ditemukan atau stok tidak mencukupi!" });
+        }
+
+        // Hitung total harga
+        const total_harga = obat.harga * jumlah;
+
+        // Kembalikan stok obat sebelumnya
+        const previousObat = await ObatModel.findOne({
+            where: {
+                id: penjualan.id_obat
+            }
+        });
+        previousObat.stok += penjualan.jumlah;
+        await previousObat.save();
+
+        // Kurangi stok obat baru yang dipilih
+        obat.stok -= jumlah;
+        await obat.save();
+
+        // Update data penjualan
+        await penjualan.update({
+            jumlah,
+            total_harga,
+            tanggal_transaksi,
+            id_obat: obat.id
         });
 
         res.status(200).json({
             status: 200,
+            message: "Penjualan berhasil diperbarui",
+            data: penjualan
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getPenjualanById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const penjualan = await PenjualanModel.findOne({
+            where: {
+                id: id
+            },
+            include: [{
+                model: ObatModel,
+                attributes: ['nama_obat', 'stok', 'harga', 'tanggal_kadaluarsa', 'status_kadaluarsa'],
+                include: {
+                    model: KategoriModel,
+                    attributes: ['nama']
+                }
+            }]
+        });
+
+        if (!penjualan) {
+            return res.status(404).json({ message: "Penjualan tidak ditemukan!" });
+        }
+
+        res.status(200).json({
+            status: 200,
             message: "success",
-            data: obatList
+            data: penjualan
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

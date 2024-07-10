@@ -16,6 +16,20 @@ export const fetchPenjualan = async (token: string) => {
 
 
   
+  export const fetchPenjualanByKategori = async (id: string, token: string) => {
+    try {
+      const response = await api.get(`fefo/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   export const fetchPenjualanById = async (id: string, token: string) => {
     try {
       const response = await api.get(`penjualan/${id}`, {
