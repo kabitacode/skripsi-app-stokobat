@@ -16,7 +16,7 @@ export const getData = async (req, res) => {
 
         allObat.forEach(obat => {
             totalStok += obat.stok;
-            if (new Date(obat.tanggal_kadaluarsa) < currentDate) {
+            if (obat.status_kadaluarsa == "Kadaluarsa") {
                 totalKadaluarsa++;
             } else if (new Date(obat.tanggal_kadaluarsa) <= oneMonthLater) {
                 totalMendekatiKadaluarsa++;
