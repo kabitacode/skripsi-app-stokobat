@@ -89,7 +89,12 @@ Content-Type: application/json
 ###
 GET  http://localhost:5000/api/obat
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTYzMDgxLCJleHAiOjE3MjA3Njc4ODF9.uf4Ww6NIQIviR6V5YWe9m7XnWhw-dL2lu226xnQe6Yw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwNTc1Nzg2LCJleHAiOjE3MjExODA1ODZ9.x85Y5ZskiwzLL5nJtnj4tfXUH76RfsGL0SIgL1sGbgA
+
+###
+GET  http://localhost:5000/api/obat?start_date=2024-07-01&end_date=2024-07-07
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwNTc1Nzg2LCJleHAiOjE3MjExODA1ODZ9.x85Y5ZskiwzLL5nJtnj4tfXUH76RfsGL0SIgL1sGbgA
 
 ###
 GET  http://localhost:5000/obat/3
@@ -177,3 +182,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6I
 DELETE   http://localhost:5000/api/penjualan/23
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMzQwMTI0LCJleHAiOjE3MjA5NDQ5MjR9.3hG9IByrE1hei15ohjQoOGCmhCs3-5WKT7Cq9QFrMPg
+
+
+###
+GET  http://localhost:5000/api/laporan/data
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTA1MTg5LCJleHAiOjE3MjA3MDk5ODl9.mYc7MgL3ZwGjoEQG94jBFcNXkMmbsn3artx3WKkd4OA

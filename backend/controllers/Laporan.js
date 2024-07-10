@@ -2,64 +2,182 @@ import { Op } from 'sequelize';
 import ObatModel from '../models/ObatModel.js';
 import PenjualanModel from '../models/PenjualanModel.js';
 import KategoriModel from '../models/KategoriModel.js';
-import xlsx from 'xlsx';
+import ExcelJS from 'exceljs';
+import path from 'path';
+import fs from 'fs';
+import os from 'os';
 
-export const getLaporan = async (req, res) => {
+// Helper function to create directory if not exists
+const ensureDirectoryExistence = (filePath) => {
+    const dirname = path.dirname(filePath);
+    if (fs.existsSync(dirname)) {
+        return true;
+    }
+    ensureDirectoryExistence(dirname);
+    fs.mkdirSync(dirname);
+};
+
+// Helper function to create Excel file
+const createExcelFile = async (data, sheetName, fileName) => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet(sheetName);
+
+    if (data.length > 0) {
+        worksheet.columns = Object.keys(data[0]).map(key => ({ header: key, key: key, width: 20 }));
+        data.forEach(item => worksheet.addRow(item));
+    }
+
+    const downloadsPath = path.join(os.homedir(), 'Downloads');
+    const filePath = path.join(downloadsPath, fileName);
+
+    // Ensure directory exists
+    ensureDirectoryExistence(filePath);
+
+    await workbook.xlsx.writeFile(filePath);
+    return filePath;
+};
+
+// Controller to get expired medicines
+export const getLaporanKadaluarsa = async (req, res) => {
     try {
         const today = new Date();
-        const oneMonthLater = new Date();
-        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
 
-        // Dapatkan obat yang sudah kadaluarsa
         const kadaluarsaObat = await ObatModel.findAll({
             where: {
                 tanggal_kadaluarsa: {
                     [Op.lt]: today
                 }
             },
-            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa'] // Ambil atribut tanggal_kadaluarsa
+            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa']
         });
 
-        // Dapatkan obat yang mendekati kadaluarsa (dalam waktu 1 bulan)
+        const dataKadaluarsa = kadaluarsaObat.map(obat => ({
+            'Nama Obat': obat.nama_obat,
+            'Stok': obat.stok,
+            'Harga': obat.harga,
+            'Kategori': obat.kategori.nama,
+            'Status Kadaluarsa': obat.status_kadaluarsa,
+            'Tanggal Kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
+        }));
+
+        const filePath = await createExcelFile(dataKadaluarsa, 'Obat Kadaluarsa', 'laporan_kadaluarsa.xlsx');
+
+        res.send({
+            status: "success",
+            message: "Data berhasil di export!",
+            path: filePath,
+        });
+    } catch (error) {
+        console.error('Error generating report:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Controller to get medicines approaching expiry
+export const getLaporanMendekatiKadaluarsa = async (req, res) => {
+    try {
+        const today = new Date();
+        const oneMonthLater = new Date();
+        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+
         const mendekatiKadaluarsaObat = await ObatModel.findAll({
             where: {
                 tanggal_kadaluarsa: {
                     [Op.between]: [today, oneMonthLater]
                 }
             },
-            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa'] // Ambil atribut tanggal_kadaluarsa
+            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa']
         });
-
-        // Membuat data untuk diekspor ke Excel
-        const dataKadaluarsa = kadaluarsaObat.map(obat => ({
-            'Nama Obat': obat.nama_obat,
-            'Stok': obat.stok,
-            'Tanggal Kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0] // Pastikan tanggal_kadaluarsa diubah ke objek Date
-        }));
 
         const dataMendekatiKadaluarsa = mendekatiKadaluarsaObat.map(obat => ({
             'Nama Obat': obat.nama_obat,
             'Stok': obat.stok,
-            'Tanggal Kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0] // Pastikan tanggal_kadaluarsa diubah ke objek Date
+            'Harga': obat.harga,
+            'Kategori': obat.kategori.nama,
+            'Status Kadaluarsa': obat.status_kadaluarsa,
+            'Tanggal Kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
         }));
 
-        const wb = xlsx.utils.book_new();
+        const filePath = await createExcelFile(dataMendekatiKadaluarsa, 'Obat Mendekati Kadaluarsa', 'laporan_mendekati_kadaluarsa.xlsx');
 
-        const wsKadaluarsa = xlsx.utils.json_to_sheet(dataKadaluarsa);
-        xlsx.utils.book_append_sheet(wb, wsKadaluarsa, 'Obat Kadaluarsa');
-
-        const wsMendekatiKadaluarsa = xlsx.utils.json_to_sheet(dataMendekatiKadaluarsa);
-        xlsx.utils.book_append_sheet(wb, wsMendekatiKadaluarsa, 'Obat Mendekati Kadaluarsa');
-
-        const buffer = xlsx.write(wb, { bookType: 'xlsx', type: 'buffer' });
-
-        res.setHeader('Content-Disposition', 'attachment; filename=laporan_obat.xlsx');
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.send(buffer);
+        res.send({
+            status: "success",
+            message: "Data berhasil di export!",
+            path: filePath,
+        });
     } catch (error) {
+        console.error('Error generating report:', error);
         res.status(500).json({ message: error.message });
     }
-}
+};
+
+// Controller to get all medicines
+export const getLaporanObat = async (req, res) => {
+    try {
+        const allObat = await ObatModel.findAll({
+            include: [
+                {
+                    model: KategoriModel
+                }
+            ]
+        });
+
+        const dataLaporan = allObat.map(obat => ({
+            'Nama Obat': obat.nama_obat,
+            'Stok': obat.stok,
+            'Kategori': obat.kategori.nama,
+            'Harga': obat.harga,
+            'Status Kadaluarsa': obat.status_kadaluarsa,
+            'Tanggal Kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
+        }));
+
+        const filePath = await createExcelFile(dataLaporan, 'Laporan Obat', 'laporan_obat.xlsx');
+
+        res.send({
+            status: "success",
+            message: "Data berhasil di export!",
+            path: filePath,
+        });
+    } catch (error) {
+        console.error('Error generating report:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Controller to get sales report
+export const getLaporanPenjualan = async (req, res) => {
+    try {
+        const dataPenjualan = await PenjualanModel.findAll({
+            include: [
+                {
+                    model: ObatModel
+                }
+            ]
+        });
+
+        const dataLaporanPenjualan = dataPenjualan.map(transaksi => ({
+            'Nama Obat': transaksi.obat.nama_obat,
+            'Stok': transaksi.obat.stok,
+            'Harga Obat': transaksi.obat.harga,
+            'Jumlah': transaksi.jumlah,
+            'Total Harga': transaksi.total_harga,
+            'Tanggal Transaksi': new Date(transaksi.tanggal_transaksi).toISOString().split('T')[0]
+        }));
+
+        const filePath = await createExcelFile(dataLaporanPenjualan, 'Laporan Penjualan', 'laporan_penjualan.xlsx');
+
+        res.send({
+            status: "success",
+            message: "Data berhasil di export!",
+            path: filePath,
+        });
+    } catch (error) {
+        console.error('Error generating report:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
 
 export const getData = async (req, res) => {
     try {

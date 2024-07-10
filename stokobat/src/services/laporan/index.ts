@@ -1,11 +1,12 @@
 import { api } from "../api";
 
-export const fetchLaporan = async (token: string) => {
+export const fetchLaporanObat = async (token: string) => {
     try {
-      const response = await api.get('/laporan', {
+      const response = await api.get('/laporan-obat', {
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          "Authorization": `Bearer ${token}`,
+          'Content-Disposition': 'attachment; filename=laporan_kadaluarsa.xlsx',
+          'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         }
       });
       return response.data;

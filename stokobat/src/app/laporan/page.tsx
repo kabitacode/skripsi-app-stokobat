@@ -6,7 +6,7 @@ import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
 import { Add, ArrowDropDownCircle, Delete, Download, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchDataLaporan, fetchLaporan, fetchObat, fetchObatDelete } from '@/services';
+import { fetchDataLaporan, fetchLaporanObat, fetchObat, fetchObatDelete } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField, MenuItem, Menu, Fade, IconButton } from '@mui/material';
 import { toast } from 'react-hot-toast';
@@ -78,7 +78,7 @@ const Page: React.FC = () => {
         if (!user || !user.token) return;
 
         try {
-            const apiData = await fetchDataLaporan(user?.token);
+            const apiData = await fetchLaporanObat(user?.token);
 
             toast.success(apiData.message || "Data berhasil Didownload!");
             fetchData();

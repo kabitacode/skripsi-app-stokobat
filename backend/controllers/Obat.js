@@ -4,17 +4,36 @@ import ObatModel from '../models/ObatModel.js';
 import UserModel from '../models/UserModel.js';
 
 export const getObat = async (req, res) => {
+    const {start_date, end_date} = req.query;
     try {
-        const today = new Date().toISOString().split('T')[0];
-        const result = await ObatModel.findAll({
-            include: [
-                { model: KategoriModel },
-                { model: UserModel, attributes: ['id', 'name', 'email', 'role'] }
-            ],
-            order: [
-                ['tanggal_kadaluarsa', 'ASC']
-            ]
-        });
+        let result;
+
+        if (start_date && end_date) {
+            result = await ObatModel.findAll({
+                include: [
+                    { model: KategoriModel },
+                    { model: UserModel, attributes: ['id', 'name', 'email', 'role'] }
+                ],
+                order: [
+                    ['tanggal_kadaluarsa', 'ASC']
+                ],
+                where: {
+                    tanggal_kadaluarsa: {
+                        [Op.between]: [start_date, end_date]
+                    }
+                }
+            });
+        } else {
+            result = await ObatModel.findAll({
+                include: [
+                    { model: KategoriModel },
+                    { model: UserModel, attributes: ['id', 'name', 'email', 'role'] }
+                ],
+                order: [
+                    ['tanggal_kadaluarsa', 'ASC']
+                ]
+            });
+        }
        
         res.status(200).json({
             status: 200,
