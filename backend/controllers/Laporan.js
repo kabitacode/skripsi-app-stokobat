@@ -44,11 +44,11 @@ export const getLaporanKadaluarsa = async (req, res) => {
 
         const kadaluarsaObat = await ObatModel.findAll({
             where: {
-                tanggal_kadaluarsa: {
-                    [Op.lt]: today
-                }
+                status_kadaluarsa: "Kadaluarsa"
             },
-            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa']
+            include: {
+                model: KategoriModel
+            }
         });
 
         const dataKadaluarsa = kadaluarsaObat.map(obat => ({
@@ -86,7 +86,9 @@ export const getLaporanMendekatiKadaluarsa = async (req, res) => {
                     [Op.between]: [today, oneMonthLater]
                 }
             },
-            attributes: ['nama_obat', 'stok', 'tanggal_kadaluarsa']
+            include: {
+                model: KategoriModel
+            }
         });
 
         const dataMendekatiKadaluarsa = mendekatiKadaluarsaObat.map(obat => ({
@@ -177,11 +179,9 @@ export const getLaporanPenjualan = async (req, res) => {
     }
 };
 
-
-
 export const getData = async (req, res) => {
     try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date();
         const oneMonthLater = new Date();
         oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
 
@@ -203,9 +203,20 @@ export const getData = async (req, res) => {
             ]
         });
 
+
+        const mendekatiKadaluarsaObat = await ObatModel.findAll({
+            where: {
+                tanggal_kadaluarsa: {
+                    [Op.between]: [today, oneMonthLater]
+                }
+            },
+            include: {
+                model: KategoriModel
+            }
+        });
+
         // Filter dan hitung obat yang sudah kadaluarsa dan mendekati kadaluarsa
-        const kadaluarsaObat = allObat.filter(obat => new Date(obat.tanggal_kadaluarsa) < today);
-        const mendekatiKadaluarsaObat = allObat.filter(obat => new Date(obat.tanggal_kadaluarsa) >= today && new Date(obat.tanggal_kadaluarsa) <= oneMonthLater);
+        const kadaluarsaObat = allObat.filter(obat => obat.status_kadaluarsa === "Kadaluarsa");
 
         const dataKadaluarsa = kadaluarsaObat.map(obat => ({
             'nama_obat': obat.nama_obat,

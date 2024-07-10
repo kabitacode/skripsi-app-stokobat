@@ -14,6 +14,8 @@ export const getData = async (req, res) => {
         const oneMonthLater = new Date();
         oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
 
+        // const mendekatiKadaluarsaObat = allObat.filter(obat => new Date(obat.tanggal_kadaluarsa) >= today && new Date(obat.tanggal_kadaluarsa) <= oneMonthLater);
+
         allObat.forEach(obat => {
             totalStok += obat.stok;
             if (obat.status_kadaluarsa == "Kadaluarsa") {
