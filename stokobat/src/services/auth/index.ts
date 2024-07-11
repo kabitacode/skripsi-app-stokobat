@@ -26,3 +26,16 @@ export const logout = async (token: string): Promise<void> => {
     }
   });
 };
+
+export const fetchRegister = async (postData: any) => {
+  try {
+    const response = await api.post('/register', postData, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

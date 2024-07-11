@@ -5,13 +5,14 @@ import {fetchDashboard} from '@/services/dashboard';
 import {fetchBatch, fetchBatchId, fetchBatchAdd, fetchBatchEdit, fetchBatchDelete} from '@/services/batch';
 import {fetchPenjualan, fetchPenjualanAdd, fetchPenjualanDelete, fetchPenjualanById, fetchPenjualanByKategori} from '@/services/penjualan';
 import {fetchLaporanObat, fetchDataLaporan, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanPenjualan} from '@/services/laporan';
-import {login, logout} from '@/services/auth';
+import {login, logout, fetchRegister} from '@/services/auth';
 import {api} from '@/services/api';
 
 export {
     api,
     login,
     logout,
+    fetchRegister,
 
     fetchDashboard,
     

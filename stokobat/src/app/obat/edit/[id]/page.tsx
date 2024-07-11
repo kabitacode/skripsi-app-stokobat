@@ -216,7 +216,7 @@ const Page: React.FC = () => {
                             disabled={loading}
                             style={{ textTransform: 'none' }}
                         >
-                            {loading ? 'Loading...' : 'Tambah'}
+                            {loading ? 'Loading...' : 'Edit'}
                         </Button>
                     </div>
                 </form>

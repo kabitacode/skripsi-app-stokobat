@@ -29,6 +29,24 @@ export const logIn = async (req, res) => {
     }
 }
 
+export const register = async (req, res) => {
+    const { name, email, password, role } = req.body;
+    try {
+        await UserModel.create({
+            name: name,
+            email: email,
+            password: password,
+            role: role
+        });
+        res.status(200).json({
+            status: 200,
+            message: "Register berhasil!"
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 export const Me = async (req, res) => {
     try {
         const user = await UserModel.findOne({

@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useRouter } from 'next/navigation';
 
 import { useForm } from 'react-hook-form';
-import { login } from '@/services';
+import { fetchRegister, login } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { AccountCircle } from "@mui/icons-material";
 import { Alert, AlertTitle, CircularProgress } from "@mui/material";
-
+import { toast } from 'react-hot-toast';
 
 
 const Page: React.FC = () => {
@@ -17,25 +17,31 @@ const Page: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { setUser } = useStore();
 
-  const handleLogin = async (data: any) => {
+  const handleRegister = async (data: any) => {
     setLoading(true);
-    setError(null);
     try {
-      const userData: User = await login(data.email, data.password);
-      setUser(userData);
-      router.push('/dashboard');
+      const postData = {
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        password: data.password,
+      };
+      const response = await fetchRegister(postData);
+      toast.success(response.message || "Data berhasil Ditambahkan!");
+      reset();
+      router.back();
     } catch (error: any) {
-      setError(error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.message || error.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-blue-200 h-svh">
+    <div className="bg-blue-200 h-full">
       <div className="container mx-auto py-8 pt-24">
         {
           error && <div className="mb-10 flex items-center justify-center">
@@ -45,9 +51,36 @@ const Page: React.FC = () => {
             </Alert>
           </div>
         }
-        <form onSubmit={handleSubmit(handleLogin)} className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-lg">
+        <form onSubmit={handleSubmit(handleRegister)} className="w-full max-w-sm mx-auto bg-white p-8 rounded-md shadow-lg">
+          {
+            loading && <CircularProgress />
+          }
           <div className="flex items-center justify-center mb-10">
             <AccountCircle sx={{ fontSize: 70 }} />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+              Name
+            </label>
+            <input
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+              type="text"
+              placeholder="Zhoel"
+              {...register('name', { required: true })}
+            />
+            {errors.email && <p className="mt-3 text-sm text-red-500">Nama is required</p>}
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
+              Role
+            </label>
+            <input
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+              type="text"
+              placeholder="Admin"
+              {...register('role', { required: true })}
+            />
+            {errors.email && <p className="mt-3 text-sm text-red-500">Role is required</p>}
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
@@ -82,8 +115,8 @@ const Page: React.FC = () => {
           >
             {loading ? <CircularProgress size={24} /> : 'Login'}
           </button>
-          <Link href={'/register'}>
-            <p className="text-sm text-center font-bold">Belum punya akun? Daftar disini</p>
+          <Link href={'/'}>
+            <p className="text-sm text-center font-bold">Sudah punya akun? Masuk disini</p>
           </Link>
         </form>
       </div>
