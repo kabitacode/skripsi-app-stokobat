@@ -32,9 +32,9 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:5000/api/dashboard
+GET  http://localhost:5000/api/updateKadaluarsa
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwMTYzMDgxLCJleHAiOjE3MjA3Njc4ODF9.uf4Ww6NIQIviR6V5YWe9m7XnWhw-dL2lu226xnQe6Yw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzIwNzcwNzI3LCJleHAiOjE3MjEzNzU1Mjd9.7VZaaS6gjVafs6uBa-bO470fVy6MhT6Ji4IvB0z10N4
 
 ###
 GET  http://localhost:5000/api/me

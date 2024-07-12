@@ -161,3 +161,36 @@ export const searchObat = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+export const updateKadaluarsa = async (req, res) => {
+    try {
+        const today = new Date().toISOString().split('T')[0];
+
+        // Mencari obat yang tanggal kadaluarsanya telah terlewat hari ini
+        const obat = await ObatModel.findAll({
+            where: {
+                tanggal_kadaluarsa: {
+                    [Op.lt]: today
+                },
+                status_kadaluarsa: {
+                    [Op.ne]: "Kadaluarsa"
+                }
+            }
+        });
+
+        // Memperbarui status kadaluarsa
+        for (let i of obat) {
+            i.status_kadaluarsa = "Kadaluarsa";
+            await i.save();
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: "Data Obat berhasil diperbarui!",
+            data: obat
+        })
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
