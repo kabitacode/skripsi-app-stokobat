@@ -42,7 +42,7 @@ const Page: React.FC = () => {
 
   return (
     <div className="bg-blue-200 h-full">
-      <div className="container mx-auto py-8 pt-24">
+      <div className="container mx-auto py-10 pt-16 pb-20">
         {
           error && <div className="mb-10 flex items-center justify-center">
             <Alert severity="error">
@@ -60,7 +60,7 @@ const Page: React.FC = () => {
           </div>
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-              Name
+              Nama
             </label>
             <input
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
@@ -113,7 +113,7 @@ const Page: React.FC = () => {
             className="w-full mb-5 bg-blue-700 text-white text-sm font-bold py-3 px-4 rounded-md hover:bg-blue-700 transition duration-300"
             type="submit"
           >
-            {loading ? <CircularProgress size={24} /> : 'Login'}
+            {loading ? <CircularProgress size={24} /> : 'Daftar'}
           </button>
           <Link href={'/'}>
             <p className="text-sm text-center font-bold">Sudah punya akun? Masuk disini</p>
