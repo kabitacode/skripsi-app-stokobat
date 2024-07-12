@@ -178,6 +178,13 @@ export const updateKadaluarsa = async (req, res) => {
             }
         });
 
+        if (obat.length === 0) {
+            return res.status(400).json({
+                status: 400,
+                message: "Tidak ada obat yang perlu diperbarui."
+            });
+        }
+
         // Memperbarui status kadaluarsa
         for (let i of obat) {
             i.status_kadaluarsa = "Kadaluarsa";
