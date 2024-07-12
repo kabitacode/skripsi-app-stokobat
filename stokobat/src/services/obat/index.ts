@@ -69,3 +69,17 @@ export const fetchObat = async (token: string) => {
       throw error;
     }
   };
+
+  export const fetchObatUpdateStatus = async (token: string) => {
+    try {
+      const response = await api.put('obat/updateKadaluarsa', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };

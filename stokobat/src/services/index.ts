@@ -1,5 +1,5 @@
 import {fetchUsers, fetchUsersId, fetchUsersAdd, fetchUsersEdit, fetchUsersDelete} from '@/services/users';
-import {fetchObat, fetchObatId, fetchObatAdd, fetchObatEdit, fetchObatDelete} from '@/services/obat';
+import {fetchObat, fetchObatId, fetchObatAdd, fetchObatEdit, fetchObatDelete, fetchObatUpdateStatus} from '@/services/obat';
 import {fetchKategori, fetchKategoriId, fetchKategoriAdd, fetchKategoriEdit, fetchKategoriDelete} from '@/services/kategori';
 import {fetchDashboard} from '@/services/dashboard';
 import {fetchBatch, fetchBatchId, fetchBatchAdd, fetchBatchEdit, fetchBatchDelete} from '@/services/batch';
@@ -27,6 +27,7 @@ export {
     fetchObatAdd,
     fetchObatEdit,
     fetchObatDelete,
+    fetchObatUpdateStatus,
 
     fetchKategori,
     fetchKategoriId,

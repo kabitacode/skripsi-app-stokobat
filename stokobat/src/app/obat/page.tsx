@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Add, Delete, Edit, Refresh } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchObat, fetchObatDelete } from '@/services';
+import { fetchObat, fetchObatDelete, fetchObatUpdateStatus } from '@/services';
 import useStore, { User } from '@/store/useStore'
-import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField } from '@mui/material';
+import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField, IconButton } from '@mui/material';
 import { toast } from 'react-hot-toast';
 import dayjs, { Dayjs } from 'dayjs';
 interface dataResponse {
@@ -72,13 +72,30 @@ const Page: React.FC = () => {
         }
     };
 
+    // const handleUpdate = async () => {
+    //     if (!user || !user.token) return;
+
+    //     try {
+    //         const apiData = await fetchObatUpdateStatus(user?.token);
+    //         toast.success(apiData.message || "Data berhasil Dihapus!");
+    //         fetchData();
+    //         setLoading(false);
+    //     } catch (error: any) {
+    //         toast.error(error.response?.data?.message || error.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
         setPage(0); // Reset page to 0 when search query changes
     };
 
     const filteredData = data.filter(item =>
-        item.nama_obat.toLowerCase().includes(searchQuery.toLowerCase())
+        item.nama_obat.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.status_kadaluarsa.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.kategori.nama.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const formattedDate = (dateString: string) => {
@@ -87,12 +104,17 @@ const Page: React.FC = () => {
 
     return (
         <DashboardLayout>
-              {
+            {
                 loading && <CircularProgress />
             }
 
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
-                <h1 className="text-2xl font-semibold">Data Obat</h1>
+                <div className='flex flex-row items-center'>
+                    <h1 className="text-2xl font-semibold">Data Obat</h1>
+                    {/* <IconButton aria-label="refresh" onClick={handleUpdate}>
+                        <Refresh />
+                    </IconButton> */}
+                </div>
 
                 <div className="">
                     <Link href={'/obat/add'}>
@@ -106,6 +128,7 @@ const Page: React.FC = () => {
             <div className="ml-5 mb-6 w-1/3">
                 <TextField
                     label="Cari Obat"
+                    placeholder='Cari Obat, Kategori, Status Kadaluarsa'
                     variant="outlined"
                     fullWidth
                     value={searchQuery}
