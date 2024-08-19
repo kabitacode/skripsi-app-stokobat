@@ -4,12 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import DashboardLayout from "../../../dashboard/layout";
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { TextField, Button, IconButton } from '@mui/material';
+import { TextField, Button, IconButton, FormControl, InputLabel, MenuItem } from '@mui/material';
 import { CustomButton, ButtonCustom } from "@/components";
 import { fetchUsersAdd, fetchUsersEdit, fetchUsersId } from '@/services';
 import useStore from '@/store/useStore';
 import { ArrowBack } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface FormData {
     name: string;
@@ -30,7 +31,11 @@ const Page: React.FC<FormData> = () => {
     const router = useRouter();
     const { user } = useStore();
     const params = useParams<{ id: string }>()
+    const [role, setRole] = React.useState('');
 
+    const handleChange = (event: SelectChangeEvent) => {
+        setRole(event.target.value as string);
+    };
 
     const fetchDataUsers = async () => {
         if (!user || !user.token) return;
@@ -40,10 +45,10 @@ const Page: React.FC<FormData> = () => {
             const result = response.data;
             reset({
                 name: result.name,
-                role: result.role,
                 email: result.email,
                 password: result.password
             })
+            setRole(result.role)
             setLoading(false);
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
@@ -63,7 +68,7 @@ const Page: React.FC<FormData> = () => {
             const postData = {
                 name: data.name,
                 email: data.email,
-                role: data.role,
+                role: role,
                 password: data.password,
                 confPassword: ""
             };
@@ -71,10 +76,10 @@ const Page: React.FC<FormData> = () => {
             toast.success(response.message || "Data berhasil Diubah!");
             reset({
                 name: "",
-                role: "",
                 email: "",
                 password: ""
             });
+            setRole("")
             router.back();
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
@@ -124,6 +129,21 @@ const Page: React.FC<FormData> = () => {
                     </div>
                     <div className='flex flex-row mb-5'>
                         <div className="w-1/3 mr-5">
+                            <FormControl fullWidth>
+                                <InputLabel id="role">Role</InputLabel>
+                                <Select
+                                    labelId="role"
+                                    id="role"
+                                    label="Role"
+                                    value={role}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value={"Admin"}>Admin</MenuItem>
+                                    <MenuItem value={"Apoteker"}>Apoteker</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                        {/* <div className="w-1/3 mr-5">
                             <TextField
                                 id="role"
                                 label="Role"
@@ -134,7 +154,7 @@ const Page: React.FC<FormData> = () => {
                                 helperText={errors.role && "Role is required"}
                                 {...register('role', { required: true })}
                             />
-                        </div>
+                        </div> */}
                         <div className="w-1/3 mr-5">
                             <TextField
                                 id="password"

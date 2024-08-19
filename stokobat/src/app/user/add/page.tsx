@@ -10,6 +10,10 @@ import { fetchUsersAdd } from '@/services';
 import useStore from '@/store/useStore';
 import { ArrowBack } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface FormData {
     name: string;
@@ -27,22 +31,32 @@ const Page: React.FC<FormData> = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<dataResponse>();
     const [error, setError] = useState<string | null>(null);
+    const [roleError, setRoleError] = useState<boolean>(false);
     const router = useRouter();
     const { user } = useStore();
+
+    const [role, setRole] = React.useState('');
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setRole(event.target.value as string);
+    };
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         if (!user || !user.token) return;
         setLoading(true);
+    
         try {
             const postData = {
                 name: data.name,
                 email: data.email,
-                role: data.role,
+                role: role,
                 password: data.password,
             };
             const response = await fetchUsersAdd(user?.token, postData);
             toast.success(response.message || "Data berhasil Ditambahkan!");
             reset();
+            setRole("");
+            router.back();
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
         } finally {
@@ -88,6 +102,23 @@ const Page: React.FC<FormData> = () => {
                     </div>
                     <div className='flex flex-row mb-5'>
                         <div className="w-1/3 mr-5">
+                            <FormControl fullWidth>
+                                <InputLabel id="role">Role</InputLabel>
+                                <Select
+                                    labelId="role"
+                                    id="role"
+                                    label="Role"
+                                    value={role}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value={"Admin"}>Admin</MenuItem>
+                                    <MenuItem value={"Apoteker"}>Apoteker</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                      
+
+                        {/* <div className="w-1/3 mr-5">
                             <TextField
                                 id="role"
                                 label="Role"
@@ -97,7 +128,7 @@ const Page: React.FC<FormData> = () => {
                                 helperText={errors.role && "Role is required"}
                                 {...register('role', { required: true })}
                             />
-                        </div>
+                        </div> */}
                         <div className="w-1/3">
                             <TextField
                                 id="password"
