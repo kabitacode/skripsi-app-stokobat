@@ -96,10 +96,13 @@ export default function DashboardLayout({ children }: any) {
                      open={open}
                      onClose={handleClose}
                   >
-                     <MenuItem onClick={handleLink} disableRipple>
-                        <AccountBox />
-                        User
-                     </MenuItem>
+                     {
+                        user?.role == "Admin" &&
+                        <MenuItem onClick={handleLink} disableRipple>
+                           <AccountBox />
+                           User
+                        </MenuItem>
+                     }
                      <MenuItem onClick={handleLogout} disableRipple>
                         <Logout />
                         Logout
