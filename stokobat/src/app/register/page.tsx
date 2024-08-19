@@ -20,7 +20,7 @@ const Page: React.FC = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { setUser } = useStore();
 
-  const handleRegister = async (data: any) => { 
+  const handleRegister = async (data: any) => {
     setLoading(true);
     try {
       const postData = {
@@ -84,7 +84,6 @@ const Page: React.FC = () => {
                 <MenuItem value={"Apoteker"}>Apoteker</MenuItem>
               </Select>
             </FormControl>
-            {errors.email && <p className="mt-3 text-sm text-red-500">Role is required</p>}
           </div>
 
           {/* <div className="mb-4">
@@ -99,7 +98,7 @@ const Page: React.FC = () => {
             />
             {errors.email && <p className="mt-3 text-sm text-red-500">Role is required</p>}
           </div> */}
-          
+
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
               Email
