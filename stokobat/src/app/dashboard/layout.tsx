@@ -137,28 +137,12 @@ export default function DashboardLayout({ children }: any) {
                         <span className={`py-1 ${activeLink === '/batch' || activeLink === '/batch/add' ? 'text-white ml-3' : 'ml-3'}`}>Batch Obat</span>
                      </Link>
                   </li> */}
-                  {
-                     user?.role == "Admin" ?
-                        <li className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
-                           <Link href="/penjualan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
-                              <Storefront sx={{ color: activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'white' : 'black' }} fontSize='small' />
-                              <span className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
-                           </Link>
-                        </li> :
-                        <>
-                           <li className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
-                              <Link href="/penjualan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
-                                 <span className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
-                              </Link>
-                           </li>
-                           <li className={`py-1 ${activeLink === '/keuangan' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
-                              <Link href="/keuangan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
-                                 <span className={`py-1 ${activeLink === '/keuangan' ? 'text-white ml-3' : 'ml-3'}`}>Keuangan</span>
-                              </Link>
-                           </li>
-                        </>
-
-                  }
+                  <li className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
+                     <Link href="/penjualan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                        <Storefront sx={{ color: activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'white' : 'black' }} fontSize='small' />
+                        <span className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
+                     </Link>
+                  </li>
                   <li className={`py-1 ${activeLink === '/laporan' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
                      <Link href="/laporan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
                         <Report sx={{ color: activeLink === '/laporan' ? 'white' : 'black' }} fontSize='small' />
