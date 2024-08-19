@@ -65,11 +65,11 @@ const Page: React.FC<FormData> = () => {
                         <div className="w-1/3 mr-5">
                             <TextField
                                 id="name"
-                                label="Name"
+                                label="Nama"
                                 variant="outlined"
                                 fullWidth
                                 error={!!errors.name}
-                                helperText={errors.name && "Name is required"}
+                                helperText={errors.name && "Nama is required"}
                                 {...register('name', { required: true })}
                             />
                         </div>
@@ -101,12 +101,12 @@ const Page: React.FC<FormData> = () => {
                         <div className="w-1/3">
                             <TextField
                                 id="password"
-                                label="password"
+                                label="Password"
                                 variant="outlined"
                                 type='password'
                                 fullWidth
                                 error={!!errors.password}
-                                helperText={errors.password && "password is required"}
+                                helperText={errors.password && "Password is required"}
                                 {...register('password', { required: true })}
                             />
                         </div>
