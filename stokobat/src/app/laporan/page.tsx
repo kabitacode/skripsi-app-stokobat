@@ -51,7 +51,6 @@ const Page: React.FC = () => {
             setDataMendekatiKadaluarsa(apiData.data.mendekatiKadaluarsa);
             setDataKadaluarsa(apiData.data.kadaluarsa);
             setDataPenjualan(apiData.data.penjualan);
-            console.log(apiData);
 
             setLoading(false);
         } catch (error: any) {

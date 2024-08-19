@@ -33,7 +33,6 @@ const Page: React.FC = () => {
             const apiData = await fetchKategori(user?.token);
             setData(apiData.data);  
             setLoading(false);
-            console.log(apiData);
             
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);

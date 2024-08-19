@@ -83,7 +83,7 @@ const Page: React.FC<FormData> = () => {
     const onSubmit: SubmitHandler<FormData> = async (data) => {
         if (!user || !user.token) return;
         setLoading(true);
-        console.log(data);
+        
         
         try {
             const postData = {

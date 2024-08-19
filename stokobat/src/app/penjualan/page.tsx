@@ -32,7 +32,7 @@ const Page: React.FC = () => {
         try {
             const apiData = await fetchPenjualan(user?.token);
             setData(apiData.data);
-            console.log(apiData);
+            
 
             setLoading(false);
 
