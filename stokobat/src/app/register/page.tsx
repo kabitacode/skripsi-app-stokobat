@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { fetchRegister, login } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { AccountCircle } from "@mui/icons-material";
-import { Alert, AlertTitle, CircularProgress } from "@mui/material";
+import { Alert, AlertTitle, CircularProgress, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { toast } from 'react-hot-toast';
 
 
@@ -20,7 +20,7 @@ const Page: React.FC = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { setUser } = useStore();
 
-  const handleRegister = async (data: any) => {
+  const handleRegister = async (data: any) => { 
     setLoading(true);
     try {
       const postData = {
@@ -70,7 +70,24 @@ const Page: React.FC = () => {
             />
             {errors.email && <p className="mt-3 text-sm text-red-500">Nama is required</p>}
           </div>
+
           <div className="mb-4">
+            <FormControl fullWidth>
+              <InputLabel id="role">Role</InputLabel>
+              <Select
+                labelId="role"
+                id="role"
+                label="Role"
+                {...register('role', { required: true })}
+              >
+                <MenuItem value={"Admin"}>Admin</MenuItem>
+                <MenuItem value={"Apoteker"}>Apoteker</MenuItem>
+              </Select>
+            </FormControl>
+            {errors.email && <p className="mt-3 text-sm text-red-500">Role is required</p>}
+          </div>
+
+          {/* <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="role">
               Role
             </label>
@@ -81,7 +98,8 @@ const Page: React.FC = () => {
               {...register('role', { required: true })}
             />
             {errors.email && <p className="mt-3 text-sm text-red-500">Role is required</p>}
-          </div>
+          </div> */}
+          
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
               Email
