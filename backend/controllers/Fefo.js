@@ -15,7 +15,8 @@ export const getObatByKategori = async (req, res) => {
                 id_kategori: id,
                 stok: {
                     [Op.gt]: 0 // Ambil obat yang stoknya lebih dari 0
-                }
+                },
+                status_kadaluarsa: "Tidak Kadaluarsa"
             },
             order: [
                 ['tanggal_kadaluarsa', 'ASC'] // Urutkan berdasarkan tanggal kadaluarsa yang mendekati
