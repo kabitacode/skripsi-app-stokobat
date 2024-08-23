@@ -17,6 +17,10 @@ const KategoriModel = db.define('kategori', {
             len: [3, 100]
         }
     },
+    penerbit: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
 } , {
     freezeTableName: true,
     timestamps: true

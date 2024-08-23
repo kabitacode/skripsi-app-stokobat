@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
