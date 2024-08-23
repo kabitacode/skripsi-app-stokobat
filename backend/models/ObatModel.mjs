@@ -33,6 +33,10 @@ const ObatModel = db.define('obat', {
             notEmpty: true,
         }
     },
+    harga_beli: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
     tanggal_kadaluarsa: {
         type: DataTypes.DATEONLY,
         allowNull: false,
