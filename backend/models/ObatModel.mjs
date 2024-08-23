@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
-import db from "../config/database.js";
-import KategoriModel from './KategoriModel.js';
-import UserModel from './UserModel.js';
+import db from "../config/database.mjs";
+import KategoriModel from './KategoriModel.mjs';
+import UserModel from './UserModel.mjs';
 
 const { DataTypes } = Sequelize;
 

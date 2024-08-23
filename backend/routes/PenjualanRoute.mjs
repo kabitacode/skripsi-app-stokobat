@@ -6,10 +6,10 @@ import {
     deletePenjualan,
     getPenjualanById, 
     updatePenjualan
-} from '../controllers/Penjualan.js'
+} from '../controllers/Penjualan.mjs'
 
 const router = express.Router();
-import { verifyUser } from "../middleware/AuthUser.js";
+import { verifyUser } from "../middleware/AuthUser.mjs";
 
 router.get('/api/penjualan', verifyUser, getPenjualan);
 router.get('/api/penjualan/:id', verifyUser, getPenjualanById);

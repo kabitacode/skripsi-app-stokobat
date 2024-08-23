@@ -5,8 +5,8 @@ import {
     logOut,
     Me,
     register
-} from '../controllers/Auth.js';
-import { verifyUser } from "../middleware/AuthUser.js";
+} from '../controllers/Auth.mjs';
+import { verifyUser } from "../middleware/AuthUser.mjs";
 
 const router = express.Router();
 

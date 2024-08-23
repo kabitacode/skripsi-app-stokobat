@@ -1,4 +1,4 @@
-import UserModel from '../models/UserModel.js';
+import UserModel from '../models/UserModel.mjs';
 import jwt from 'jsonwebtoken';
 
 const blacklistedTokens = new Set();

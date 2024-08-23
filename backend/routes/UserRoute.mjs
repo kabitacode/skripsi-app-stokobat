@@ -6,8 +6,8 @@ import {
     createUser,
     updateUser,
     deleteUser
-} from '../controllers/Users.js';
-import { verifyUser, adminOnly } from '../middleware/AuthUser.js';
+} from '../controllers/Users.mjs';
+import { verifyUser, adminOnly } from '../middleware/AuthUser.mjs';
 
 const router = express.Router();
 

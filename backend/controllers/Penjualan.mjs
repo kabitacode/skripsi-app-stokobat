@@ -1,7 +1,7 @@
-import PenjualanModel from '../models/PenjualanModel.js';
-import ObatModel from '../models/ObatModel.js';
+import PenjualanModel from '../models/PenjualanModel.mjs';
+import ObatModel from '../models/ObatModel.mjs';
 import { Sequelize, Op } from 'sequelize';
-import KategoriModel from '../models/KategoriModel.js';
+import KategoriModel from '../models/KategoriModel.mjs';
 
 // Penjualan dengan metode FEFO
 export const createPenjualan = async (req, res) => {

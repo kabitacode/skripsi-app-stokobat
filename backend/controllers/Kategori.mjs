@@ -1,4 +1,4 @@
-import KategoriModel from '../models/KategoriModel.js';
+import KategoriModel from '../models/KategoriModel.mjs';
 
 export const getKategori = async (req, res) => {
     try {

@@ -2,10 +2,10 @@ import express from 'express';
 
 import {
     getData
-} from '../controllers/Dashboard.js'
+} from '../controllers/Dashboard.mjs'
 
 const router = express.Router();
-import { verifyUser } from "../middleware/AuthUser.js";
+import { verifyUser } from "../middleware/AuthUser.mjs";
 
 router.get('/api/dashboard', verifyUser, getData);
 

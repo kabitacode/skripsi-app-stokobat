@@ -1,4 +1,4 @@
-import ObatModel from "../models/ObatModel.js";
+import ObatModel from "../models/ObatModel.mjs";
 
 export const getData = async (req, res) => {
     try {

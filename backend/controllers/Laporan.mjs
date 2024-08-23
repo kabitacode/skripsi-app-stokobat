@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
-import ObatModel from '../models/ObatModel.js';
-import PenjualanModel from '../models/PenjualanModel.js';
-import KategoriModel from '../models/KategoriModel.js';
+import ObatModel from '../models/ObatModel.mjs';
+import PenjualanModel from '../models/PenjualanModel.mjs';
+import KategoriModel from '../models/KategoriModel.mjs';
 import ExcelJS from 'exceljs';
 import path from 'path';
 import fs from 'fs';

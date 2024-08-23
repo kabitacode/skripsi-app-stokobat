@@ -6,8 +6,8 @@ import {
     createKategori,
     updateKategori,
     deleteKategori
-} from '../controllers/Kategori.js';
-import { verifyUser } from "../middleware/AuthUser.js";
+} from '../controllers/Kategori.mjs';
+import { verifyUser } from "../middleware/AuthUser.mjs";
 
 const router = express.Router();
 

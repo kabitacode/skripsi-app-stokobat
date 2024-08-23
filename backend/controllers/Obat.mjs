@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
-import KategoriModel from '../models/KategoriModel.js';
-import ObatModel from '../models/ObatModel.js';
-import UserModel from '../models/UserModel.js';
+import KategoriModel from '../models/KategoriModel.mjs';
+import ObatModel from '../models/ObatModel.mjs';
+import UserModel from '../models/UserModel.mjs';
 
 export const getObat = async (req, res) => {
     try {

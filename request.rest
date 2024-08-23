@@ -58,8 +58,9 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IkFwb3Rla2VyIiwiaWF0IjoxNzE5OTk2ODYxLCJleHAiOjE3MjA2MDE2NjF9.t2WaJRKZ2V5bO34pdeVuRX2gIe7jsdVpB4zmr-twoQY
 
 ###
-GET  http://localhost:5000/kategori
+GET  http://localhost:5000/api/kategori
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFkbWluIiwiaWF0IjoxNzI0NDAxMTQ0LCJleHAiOjE3MjUwMDU5NDR9.e96GAguIyT1rCzISPOYe81dj3T6xAF94Eazlel4uqZ4
 
 ###
 GET  http://localhost:5000/kategori/12

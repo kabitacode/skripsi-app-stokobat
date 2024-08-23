@@ -1,7 +1,7 @@
-import PenjualanModel from '../models/PenjualanModel.js';
-import ObatModel from '../models/ObatModel.js';
+import PenjualanModel from '../models/PenjualanModel.mjs';
+import ObatModel from '../models/ObatModel.mjs';
 import { Sequelize, Op } from 'sequelize';
-import KategoriModel from '../models/KategoriModel.js';
+import KategoriModel from '../models/KategoriModel.mjs';
 
 // Mendapatkan Obat Berdasarkan Kategori dengan Metode FEFO
 export const getObatByKategori = async (req, res) => {

@@ -1,19 +1,19 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import db from './config/database.js';
+import db from './config/database.mjs';
 import bodyParser from 'body-parser';
 
 //Route
-import UserRoute from './routes/UserRoute.js';
-import ObatRoute from './routes/ObatRoute.js';
-import AuthRoute from './routes/AuthRoute.js';
-import KategoriRoute from './routes/KategoriRoute.js';
-import BatchRoute from './routes/BatchRoute.js';
-import PenjualanRoute from './routes/PenjualanRoute.js';
-import DashboardRoute from './routes/DashboardRoute.js';
-import LaporanRoute from './routes/LaporanRoute.js';
-import FefoRoute from './routes/FefoRoute.js';
+import UserRoute from './routes/UserRoute.mjs';
+import ObatRoute from './routes/ObatRoute.mjs';
+import AuthRoute from './routes/AuthRoute.mjs';
+import KategoriRoute from './routes/KategoriRoute.mjs';
+import BatchRoute from './routes/BatchRoute.mjs';
+import PenjualanRoute from './routes/PenjualanRoute.mjs';
+import DashboardRoute from './routes/DashboardRoute.mjs';
+import LaporanRoute from './routes/LaporanRoute.mjs';
+import FefoRoute from './routes/FefoRoute.mjs';
 
 
 

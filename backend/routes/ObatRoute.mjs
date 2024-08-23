@@ -7,8 +7,8 @@ import {
     updateObat,
     deleteObat,
     updateKadaluarsa
-} from '../controllers/Obat.js';
-import {verifyUser} from '../middleware/AuthUser.js'
+} from '../controllers/Obat.mjs';
+import {verifyUser} from '../middleware/AuthUser.mjs'
 
 const router = express.Router();
 

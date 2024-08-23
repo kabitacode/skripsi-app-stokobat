@@ -6,8 +6,8 @@ import {
    getLaporanMendekatiKadaluarsa,
    getLaporanObat,
    getLaporanPenjualan
-} from '../controllers/Laporan.js';
-import { verifyUser } from "../middleware/AuthUser.js";
+} from '../controllers/Laporan.mjs';
+import { verifyUser } from "../middleware/AuthUser.mjs";
 
 const router = express.Router();
 

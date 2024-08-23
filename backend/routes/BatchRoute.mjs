@@ -6,10 +6,10 @@ import {
     createBatch,
     updateBatch,
     deleteBatch,
-} from '../controllers/Batch.js'
+} from '../controllers/Batch.mjs'
 
 const router = express.Router();
-import { verifyUser } from "../middleware/AuthUser.js";
+import { verifyUser } from "../middleware/AuthUser.mjs";
 
 router.get('/api/batch', verifyUser, getBatch);
 router.get('/api/batch/:id', verifyUser, getBatchById);

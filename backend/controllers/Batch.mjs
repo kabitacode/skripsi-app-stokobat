@@ -1,6 +1,6 @@
 import { Op } from 'sequelize';
-import BatchObatModel from '../models/BatchObatModel.js';
-import ObatModel from '../models/ObatModel.js';
+import BatchObatModel from '../models/BatchObatModel.mjs';
+import ObatModel from '../models/ObatModel.mjs';
 
 export const getBatch = async (req, res) => {
     try {

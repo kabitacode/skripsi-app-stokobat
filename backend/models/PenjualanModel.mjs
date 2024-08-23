@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
-import db from "../config/database.js";
-import ObatModel from "./ObatModel.js";  
+import db from "../config/database.mjs";
+import ObatModel from "./ObatModel.mjs";  
 
 const { DataTypes } = Sequelize;
 
