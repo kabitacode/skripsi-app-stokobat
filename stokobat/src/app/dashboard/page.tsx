@@ -14,6 +14,14 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import dayjs, { Dayjs } from 'dayjs';
 
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { BarChart, LineChart } from '@mui/x-charts';
+
+import axios from 'axios';
+import { fetchDashboardPenjualan } from '@/services/dashboard';
+
 interface dataResponse {
   totalKadaluarsa: string;
   totalMendekatiKadaluarsa: string;
@@ -34,18 +42,19 @@ const Page: React.FC = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  
+
   const [dataMendekati, setDataMendekati] = useState<any[]>([]);
   const [pageMendekati, setPageMendekati] = useState(0);
   const [rowsPerPageMendekati, setRowsPerPageMendekati] = useState(10);
   const [searchQueryMendekati, setSearchQueryMendekati] = useState<string>('');
-  
+
   const [dataKadaluarsa, setDataKadaluarsa] = useState<any[]>([]);
   const [pageKadaluarsa, setPageKadaluarsa] = useState(0);
   const [rowsPerPageKadaluarsa, setRowsPerPageKadaluarsa] = useState(10);
   const [searchQueryKadaluarsa, setSearchQueryKadaluarsa] = useState<string>('');
 
-
+  const [dataPenjualan, setDataPenjualan] = useState([]);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
 
 
   useEffect(() => {
@@ -65,12 +74,42 @@ const Page: React.FC = () => {
 
       setLoading(false);
 
+
+
     } catch (error: any) {
       toast.error(error.response?.data?.message || error.message);
     } finally {
       setLoading(false);
     }
   };
+
+  // Grafik
+  const fetchDataPenjualan = async () => {
+    setLoading(true)
+    if (!user || !user.token) return;
+    try {
+      const bulan = selectedDate.month() + 1; // Karena bulan dimulai dari 0
+      const tahun = selectedDate.year();
+      const response = await fetchDashboardPenjualan(user?.token, bulan, tahun)
+      setDataPenjualan(response.data);
+      console.log('laporan', response);
+
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedDate) {
+      fetchDataPenjualan();
+    }
+  }, [selectedDate]);
+
+  const labels = dataPenjualan?.map(item => item.obat.nama_obat);
+  const jumlahData = dataPenjualan?.map(item => item.total_jumlah);
+  const pendapatanData = dataPenjualan?.map(item => item.total_pendapatan);
 
 
   //Stok
@@ -135,9 +174,9 @@ const Page: React.FC = () => {
     item.status_kadaluarsa.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.kategori.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
-  
-  
+
+
+
   const formattedDate = (dateString: string) => {
     return dayjs(dateString).format('DD MMMM YYYY');
   };
@@ -183,8 +222,7 @@ const Page: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
-      <div className="flex ml-10">
+
         <Card sx={{ minWidth: 300, backgroundColor: "#95d0fb" }} className=''>
           <CardContent>
             <div className='flex flex-row justify-between mb-3 items-center'>
@@ -202,7 +240,53 @@ const Page: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+
       </div>
+
+
+      <div className='mx-8'>
+        <h1 className="text-2xl font-semibold mb-7">Laporan Transaksi Penjualan</h1>
+
+        <Box sx={{ mb: 2, display: 'flex', gap: 2 }}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              views={['year', 'month']}
+              label="Pilih Bulan & Tahun"
+              value={selectedDate}
+              onChange={(newValue: Dayjs | null) => {
+                if (newValue) {
+                  setSelectedDate(newValue);
+                }
+              }}
+              renderInput={(params) => <TextField {...params} helperText={null} />}
+              disableFuture
+            />
+          </LocalizationProvider>
+          <Button variant="contained" onClick={fetchDataPenjualan}>Lihat Laporan</Button>
+        </Box>
+
+
+
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          dataPenjualan?.length > 0 ? (
+            <BarChart
+              xAxis={[{ data: labels, label: 'Obat', scaleType: 'band' }]}
+              series={[
+                { data: jumlahData, label: 'Total Jumlah', color: '#42a5f5' },
+                { data: pendapatanData, label: 'Total Pendapatan', color: '#ef5350' }
+              ]}
+              width={800}
+              height={400}
+            />
+
+          ) : (
+            <Typography>Masukkan bulan dan tahun untuk melihat laporan penjualan.</Typography>
+          )
+        )}
+      </div>
+
       {/* //Modal Stok */}
       <div>
         <Modal
@@ -213,9 +297,9 @@ const Page: React.FC = () => {
         >
           <Box sx={style}>
             <div className="mb-5 flex flex-row items-center justify-between">
-            <div></div>
-            <div></div>
-            <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
               <Typography id="modal-modal-title" variant="h6" component="h2" className='text-center font-extrabold'>
                 Total Stok Obat
               </Typography>
@@ -285,9 +369,9 @@ const Page: React.FC = () => {
         >
           <Box sx={style}>
             <div className="mb-5 flex flex-row items-center justify-between">
-            <div></div>
-            <div></div>
-            <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
               <Typography id="modal-modal-title" variant="h6" component="h2" className='text-center font-extrabold'>
                 Total Kadaluarsa
               </Typography>
@@ -357,9 +441,9 @@ const Page: React.FC = () => {
         >
           <Box sx={style}>
             <div className="mb-5 flex flex-row items-center justify-between">
-            <div></div>
-            <div></div>
-            <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
               <Typography id="modal-modal-title" variant="h6" component="h2" className='text-center font-extrabold'>
                 Total Mendekati Kadaluarsa
               </Typography>
