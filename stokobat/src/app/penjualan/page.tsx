@@ -126,7 +126,7 @@ const Page: React.FC = () => {
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Jumlah</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Total Harga</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Transaksi</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell>
+                            {/* <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -137,7 +137,7 @@ const Page: React.FC = () => {
                                 <TableCell>{item.jumlah}</TableCell>
                                 <TableCell>{item.total_harga}</TableCell>
                                 <TableCell>{formattedDate(item.tanggal_transaksi)}</TableCell>
-                                <TableCell>
+                                {/* <TableCell>
                                     <div className='flex flex-row justify-center'>
                                         <div className='mr-2'>
                                             <ButtonCustom
@@ -162,7 +162,7 @@ const Page: React.FC = () => {
                                             </ButtonCustom>
                                         </div>
                                     </div>
-                                </TableCell>
+                                </TableCell> */}
                             </TableRow>
                         ))}
                     </TableBody>
