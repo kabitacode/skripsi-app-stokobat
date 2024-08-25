@@ -1,5 +1,8 @@
+import { Sequelize } from 'sequelize';
 import KategoriModel from "../models/KategoriModel.mjs";
 import ObatModel from "../models/ObatModel.mjs";
+import PenjualanModel from '../models/PenjualanModel.mjs';
+
 
 export const getData = async (req, res) => {
     try {
@@ -78,6 +81,39 @@ export const getData = async (req, res) => {
                     mendekatiKadaluarsaObat // Detail obat-obat yang mendekati kadaluarsa
                 }
             }
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getPenjualanByBulan = async (req, res) => {
+    try {
+        const { bulan, tahun } = req.query;
+
+        const penjualan = await PenjualanModel.findAll({
+            attributes: [
+                [Sequelize.fn('SUM', Sequelize.col('jumlah')), 'total_jumlah'],
+                [Sequelize.fn('SUM', Sequelize.col('total_harga')), 'total_pendapatan'],
+                'id_obat'
+            ],
+            where: {
+                [Sequelize.Op.and]: [
+                    Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('tanggal_transaksi')), bulan),
+                    Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('tanggal_transaksi')), tahun)
+                ]
+            },
+            include: {
+                model: ObatModel,
+                attributes: ['nama_obat']
+            },
+            group: ['id_obat']
+        });
+
+        res.status(200).json({
+            status: 200,
+            message: "success",
+            data: penjualan
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
