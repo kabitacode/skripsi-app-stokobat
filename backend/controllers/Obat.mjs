@@ -242,3 +242,56 @@ export const getFilteredObat = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+export const getObatByStokAndKadaluarsa = async (req, res) => {
+    try {
+        const { min_stok, stok_habis, mendekati_kadaluarsa } = req.query;
+
+        // Buat objek where untuk menampung kondisi filter
+        const whereCondition = {};
+
+        // Filter berdasarkan minimum stok
+        if (min_stok) {
+            whereCondition.stok = {
+                [Op.lte]: parseInt(min_stok)
+            };
+        }
+
+        // Filter untuk stok yang sudah habis
+        if (stok_habis === 'true') {
+            whereCondition.stok = 0;
+        }
+
+        // Filter untuk obat yang mendekati kadaluarsa (dalam 1 bulan ke depan)
+        if (mendekati_kadaluarsa === 'true') {
+            const today = new Date();
+            const oneMonthLater = new Date();
+            oneMonthLater.setMonth(oneMonthLater.getMonth() + 1);
+
+            whereCondition.tanggal_kadaluarsa = {
+                [Op.between]: [today, oneMonthLater]
+            };
+        }
+
+        // Query untuk mendapatkan data obat berdasarkan kondisi filter
+        const filteredObat = await ObatModel.findAll({
+            where: whereCondition
+        });
+
+        if (filteredObat.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                message: "Tidak ada obat yang sesuai dengan filter."
+            });
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: "Data obat berhasil ditemukan.",
+            data: filteredObat
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
