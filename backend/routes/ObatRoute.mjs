@@ -7,7 +7,8 @@ import {
     updateObat,
     deleteObat,
     updateKadaluarsa,
-    getFilteredObat
+    getFilteredObat,
+    getObatByStokAndKadaluarsa
 } from '../controllers/Obat.mjs';
 import {verifyUser} from '../middleware/AuthUser.mjs'
 
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.get('/api/obat', verifyUser, getObat);
 router.get('/api/obat/filter', verifyUser, getFilteredObat);
+router.get('/api/obat/filter-stok', verifyUser, getObatByStokAndKadaluarsa);
 router.get('/api/obat/:id', verifyUser, getObatById);
 router.post('/api/obat', verifyUser, createObat);
 router.patch('/api/obat/:id', verifyUser, updateObat);
