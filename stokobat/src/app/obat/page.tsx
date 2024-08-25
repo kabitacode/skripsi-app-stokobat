@@ -6,11 +6,22 @@ import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
 import { Add, Delete, Edit, Refresh } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchObat, fetchObatDelete, fetchObatUpdateStatus } from '@/services';
+import { fetchObat, fetchObatDelete, fetchObatUpdateStatus, fetchFilterObat, fetchFilterObatByStatus } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField, IconButton } from '@mui/material';
 import { toast } from 'react-hot-toast';
 import dayjs, { Dayjs } from 'dayjs';
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 interface dataResponse {
     message: string
 }
@@ -24,6 +35,10 @@ const Page: React.FC = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState<string>('');
+    const [start_date, setStartDate] = useState<Dayjs | null>(dayjs());
+    const [end_date, setEndDate] = useState<Dayjs | null>(dayjs());
+    const [status, setStatus] = React.useState('');
+
 
 
     const fetchData = async () => {
@@ -72,6 +87,38 @@ const Page: React.FC = () => {
         }
     };
 
+    const getFilter = async () => {
+        setLoading(true)
+        if (!user || !user.token) return;
+        try {
+            const tanggalMulai = start_date?.format('YYYY-MM-DD')
+            const tanggalSelesai = end_date?.format('YYYY-MM-DD')
+            const response = await fetchFilterObat(user?.token, tanggalMulai, tanggalSelesai)
+            console.log(response);
+            setData(response.data);
+            toast.success(response.message || "Success!");
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFilterByStatus = async (param: any) => {
+        setLoading(true)
+        if (!user || !user.token) return;
+        try {
+            const response = await fetchFilterObatByStatus(user?.token, param)
+            console.log('response',response);
+            setData(response.data);
+            toast.success(response.message || "Success!");
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // const handleUpdate = async () => {
     //     if (!user || !user.token) return;
 
@@ -100,6 +147,11 @@ const Page: React.FC = () => {
 
     const formattedDate = (dateString: string) => {
         return dayjs(dateString).format('DD MMMM YYYY');
+    };
+
+    const handleChange = (event: SelectChangeEvent) => {
+        setStatus(event.target.value);
+        getFilterByStatus(event.target.value)
     };
 
     return (
@@ -135,6 +187,56 @@ const Page: React.FC = () => {
                     onChange={handleSearchChange}
                 />
             </div>
+
+
+            <div className='ml-5 mb-5'>
+                <h4 className="text-lg font-semibold mb-3">Filter By Tanggal</h4>
+                <div className="flex flex-row">
+                    <div className='mr-3'>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Tanggal Mulai"
+                                value={start_date}
+                                onChange={(newValue) => setStartDate(newValue)}
+                            />
+                        </LocalizationProvider>
+                    </div>
+
+                    <div className='mr-3'>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Tanggal Selesai"
+                                value={end_date}
+                                onChange={(newValue) => setEndDate(newValue)}
+                            />
+                        </LocalizationProvider>
+                    </div>
+                    <Button variant="contained" onClick={() => getFilter()}>Filter</Button>
+                </div>
+            </div>
+
+            <div className='mb-5 ml-5'>
+                <h4 className="text-lg font-semibold mb-3">Filter By Status</h4>
+                <div className="mr-3">
+                    <FormControl sx={{ minWidth: 120 }} size="small">
+                        <InputLabel id="demo-select-small-label">Status</InputLabel>
+                        <Select
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            value={status}
+                            label="Age"
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={"Tidak Kadaluarsa"}>Tidak Kadaluarsa</MenuItem>
+                            <MenuItem value={"Kadaluarsa"}>Kadaluarsa</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+            </div>
+
 
             <div className='mx-5'>
                 <Table>
