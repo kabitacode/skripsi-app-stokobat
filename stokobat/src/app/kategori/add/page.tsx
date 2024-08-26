@@ -13,6 +13,7 @@ import { toast } from 'react-hot-toast';
 
 interface FormData {
     name: string;
+    supplier: string
 }
 
 interface dataResponse {
@@ -33,10 +34,12 @@ const Page: React.FC<FormData> = () => {
         try {
             const postData = {
                 nama: data.name,
+                penerbit: data.supplier
             };
             const response = await fetchKategoriAdd(user?.token, postData);
             toast.success(response.message || "Data berhasil Ditambahkan!");
             reset();
+            router.back()
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
         } finally {
@@ -64,6 +67,17 @@ const Page: React.FC<FormData> = () => {
                             error={!!errors.name}
                             helperText={errors.name && "Nama Kategori is required"}
                             {...register('name', { required: true })}
+                        />
+                    </div>
+                    <div className="w-1/3 mr-5 mb-5">
+                        <TextField
+                            id="supplier"
+                            label="Supplier / Penerbit"
+                            variant="outlined"
+                            fullWidth
+                            error={!!errors.supplier}
+                            helperText={errors.supplier && "Nama Supplier is required"}
+                            {...register('supplier', { required: true })}
                         />
                     </div>
 

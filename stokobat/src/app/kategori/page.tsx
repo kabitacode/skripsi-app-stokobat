@@ -116,6 +116,7 @@ const Page: React.FC = () => {
                         <TableRow>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Kategori</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Supplier / Penerbit</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell>
                         </TableRow>
                     </TableHead>
@@ -124,6 +125,7 @@ const Page: React.FC = () => {
                             <TableRow key={item.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{item.nama}</TableCell>
+                                <TableCell>{item.penerbit}</TableCell>
                                 <TableCell>
                                     <div className='flex flex-row justify-center'>
                                         <div className='mr-2'>

@@ -13,6 +13,7 @@ import { toast } from 'react-hot-toast';
 
 interface FormData {
     nama: string;
+    supplier: string;
 }
 
 interface dataResponse {
@@ -37,6 +38,7 @@ const Page: React.FC<FormData> = () => {
             const result = response.data;
             reset({
                 nama: result.nama,
+                supplier: result.penerbit
             })
             setLoading(false);
         } catch (error: any) {
@@ -56,11 +58,13 @@ const Page: React.FC<FormData> = () => {
         try {
             const postData = {
                 nama: data.nama,
+                penerbit: data.supplier
             };
             const response = await fetchKategoriEdit(user?.token, params.id, postData);
             toast.success(response.message || "Data berhasil Diubah!");
             reset({
                 nama: "",
+                supplier: ""
             });
             router.back();
         } catch (error: any) {
@@ -91,6 +95,18 @@ const Page: React.FC<FormData> = () => {
                             error={!!errors.nama}
                             helperText={errors.nama && "Nama Kategori is required"}
                             {...register('nama', { required: true })}
+                        />
+                    </div>
+                    <div className="w-1/3 mr-5 mb-5">
+                        <TextField
+                            id="supplier"
+                            label="Supplier / Penerbit"
+                            variant="outlined"
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                            error={!!errors.supplier}
+                            helperText={errors.supplier && "Supplier is required"}
+                            {...register('supplier', { required: true })}
                         />
                     </div>
                     <div className="mt-8">
