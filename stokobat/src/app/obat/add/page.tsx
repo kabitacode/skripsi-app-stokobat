@@ -20,13 +20,16 @@ interface FormData {
     name: string;
     stok: string;
     harga: string;
+    harga_beli: string;
     tanggal: Dayjs | null;
     kategori: string;
+    penerbit: string;
 }
 
 interface dataResponse {
     id: number;
     nama: string;
+    penerbit: string;
 }
 
 const Page: React.FC = () => {
@@ -68,8 +71,10 @@ const Page: React.FC = () => {
                 nama_obat: data.name,
                 stok: data.stok,
                 harga: data.harga,
+                harga_beli: data.harga_beli,
                 tanggal_kadaluarsa: tanggal?.format('YYYY-MM-DD'),
                 id_kategori: data.kategori,
+                id_penerbit: data.penerbit,
             };
             const response = await fetchObatAdd(user?.token, postData);
             toast.success(response.message || "Data berhasil Ditambahkan!");
@@ -91,7 +96,7 @@ const Page: React.FC = () => {
                 </IconButton>
                 <h1 className="text-2xl font-semibold mt-1 ml-2">Tambah Data Obat</h1>
                 {
-                    loading && <CircularProgress/>
+                    loading && <CircularProgress />
                 }
             </div>
 
@@ -126,53 +131,92 @@ const Page: React.FC = () => {
                         <div className="w-1/3 mr-5">
                             <TextField
                                 id="harga"
-                                label="Harga"
+                                label="Harga Jual"
                                 type='number'
                                 variant="outlined"
                                 fullWidth
                                 error={!!errors.harga}
-                                helperText={errors.harga && "Harga is required"}
+                                helperText={errors.harga && "Harga Jual is required"}
                                 {...register('harga', { required: true })}
                             />
                         </div>
                         <div className="w-1/3">
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DatePicker
-                                    label="Tanggal Kadaluarsa"
-                                    minDate={dayjs()}
-                                    value={tanggal}
-                                    onChange={(newValue) => {
-                                        setTanggal(newValue);
-                                        setValue('tanggal', newValue, { shouldValidate: true });
-                                    }}
-                                />
-                            </LocalizationProvider>
+                            <TextField
+                                id="harga_beli"
+                                label="Harga Beli"
+                                type='number'
+                                variant="outlined"
+                                fullWidth
+                                error={!!errors.harga_beli}
+                                helperText={errors.harga_beli && "Harga Beli is required"}
+                                {...register('harga_beli', { required: true })}
+                            />
                         </div>
                     </div>
-                    <div className="w-1/3 mb-5">
+                    <div className='flex flex-row mb-5'>
+                        <div className="w-1/3 mr-5">
+                            <FormControl fullWidth error={!!errors.kategori}>
+                                <InputLabel id="kategori-label">Kategori</InputLabel>
+                                <Controller
+                                    name="kategori"
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{ required: "Kategori is required" }}
+                                    render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                        <Select
+                                            labelId="kategori-label"
+                                            id="kategori"
+                                            value={value}
+                                            label="Kategori"
+                                            onChange={onChange}
+                                        >
+                                            {data.map((item) => (
+                                                <MenuItem key={item.id} value={item.id}>{item.nama}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    )}
+                                />
+                                {errors.kategori && <p className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained mui-1wc848c-MuiFormHelperText-root" id="kategori">{errors.kategori.message}</p>}
+                            </FormControl>
+                        </div>
+                        <div className="w-1/3">
                         <FormControl fullWidth error={!!errors.kategori}>
-                            <InputLabel id="kategori-label">Kategori</InputLabel>
+                            <InputLabel id="penerbit-label">Penerbit</InputLabel>
                             <Controller
-                                name="kategori"
+                                name="penerbit"
                                 control={control}
                                 defaultValue=""
-                                rules={{ required: "Kategori is required" }}
+                                rules={{ required: "Penerbit is required" }}
                                 render={({ field: { onChange, value }, fieldState: { error } }) => (
                                     <Select
-                                        labelId="kategori-label"
-                                        id="kategori"
+                                        labelId="penerbit-label"
+                                        id="penerbit"
                                         value={value}
-                                        label="Kategori"
+                                        label="Penerbit"
                                         onChange={onChange}
                                     >
                                         {data.map((item) => (
-                                            <MenuItem key={item.id} value={item.id}>{item.nama}</MenuItem>
+                                            <MenuItem key={item.id} value={item.id}>{item.penerbit}</MenuItem>
                                         ))}
                                     </Select>
                                 )}
                             />
-                            {errors.kategori && <p className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained mui-1wc848c-MuiFormHelperText-root" id="kategori">{errors.kategori.message}</p>}
+                            {errors.penerbit && <p className="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained mui-1wc848c-MuiFormHelperText-root" id="penerbit">{errors.penerbit.message}</p>}
                         </FormControl>
+                    </div>
+                    </div>
+                    <div className="w-1/3">
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Tanggal Kadaluarsa"
+                                minDate={dayjs()}
+                                value={tanggal}
+                                onChange={(newValue) => {
+                                    setTanggal(newValue);
+                                    setValue('tanggal', newValue, { shouldValidate: true });
+                                }}
+                            />
+                        </LocalizationProvider>
                     </div>
                     <div className="mt-8">
                         <Button
