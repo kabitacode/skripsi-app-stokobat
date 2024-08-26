@@ -72,7 +72,7 @@ const Page: React.FC<FormData> = () => {
                     <div className="w-1/3 mr-5 mb-5">
                         <TextField
                             id="supplier"
-                            label="Supplier / Penerbit"
+                            label="Penerbit"
                             variant="outlined"
                             fullWidth
                             error={!!errors.supplier}
