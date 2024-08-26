@@ -6,7 +6,7 @@ import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
 import { Add, Delete, Edit, Refresh } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchObat, fetchObatDelete, fetchObatUpdateStatus, fetchFilterObat, fetchFilterObatByStatus } from '@/services';
+import { fetchObat, fetchObatDelete, fetchObatUpdateStatus, fetchFilterObat, fetchFilterObatByStatus, fetchFilterObatByEmptyStok } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField, IconButton } from '@mui/material';
 import { toast } from 'react-hot-toast';
@@ -38,6 +38,7 @@ const Page: React.FC = () => {
     const [start_date, setStartDate] = useState<Dayjs | null>(dayjs());
     const [end_date, setEndDate] = useState<Dayjs | null>(dayjs());
     const [status, setStatus] = React.useState('');
+    const [statusStok, setStatusStok] = React.useState('');
 
 
 
@@ -109,7 +110,22 @@ const Page: React.FC = () => {
         if (!user || !user.token) return;
         try {
             const response = await fetchFilterObatByStatus(user?.token, param)
-            console.log('response',response);
+            console.log('response', response);
+            setData(response.data);
+            toast.success(response.message || "Success!");
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFilterByEmptyStok = async (param: any) => {
+        setLoading(true)
+        if (!user || !user.token) return;
+        try {
+            const response = await fetchFilterObatByEmptyStok(user?.token, param)
+            console.log('response', response);
             setData(response.data);
             toast.success(response.message || "Success!");
         } catch (error: any) {
@@ -154,6 +170,11 @@ const Page: React.FC = () => {
         getFilterByStatus(event.target.value)
     };
 
+    const handleChangeStok = (event: SelectChangeEvent) => {
+        setStatusStok(event.target.value);
+        getFilterByEmptyStok(event.target.value)
+    };
+
     return (
         <DashboardLayout>
             {
@@ -191,7 +212,7 @@ const Page: React.FC = () => {
 
             <div className='ml-5 mb-5'>
                 <h4 className="text-lg font-semibold mb-3">Filter By Tanggal</h4>
-                <div className="flex flex-row">
+                <div className="flex flex-row items-center">
                     <div className='mr-3'>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
@@ -211,29 +232,52 @@ const Page: React.FC = () => {
                             />
                         </LocalizationProvider>
                     </div>
-                    <Button variant="contained" onClick={() => getFilter()}>Filter</Button>
+                    <Button variant="contained" sx={{ height: 40 }} onClick={() => getFilter()}>Filter</Button>
                 </div>
             </div>
 
-            <div className='mb-5 ml-5'>
-                <h4 className="text-lg font-semibold mb-3">Filter By Status</h4>
-                <div className="mr-3">
-                    <FormControl sx={{ minWidth: 120 }} size="small">
-                        <InputLabel id="demo-select-small-label">Status</InputLabel>
-                        <Select
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            value={status}
-                            label="Age"
-                            onChange={handleChange}
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value={"Tidak Kadaluarsa"}>Tidak Kadaluarsa</MenuItem>
-                            <MenuItem value={"Kadaluarsa"}>Kadaluarsa</MenuItem>
-                        </Select>
-                    </FormControl>
+            <div className='mb-5 ml-5 flex flex-row'>
+                <div className='mr-5'>
+                    <h4 className="text-lg font-semibold mb-3">Filter By Status</h4>
+                    <div className="mr-3">
+                        <FormControl sx={{ minWidth: 120 }} size="small">
+                            <InputLabel id="demo-select-small-label">Status</InputLabel>
+                            <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={status}
+                                label="Age"
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={"Tidak Kadaluarsa"}>Tidak Kadaluarsa</MenuItem>
+                                <MenuItem value={"Kadaluarsa"}>Kadaluarsa</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                </div>
+                <div>
+                    <h4 className="text-lg font-semibold mb-3">Filter By Empty Stok</h4>
+                    <div className="mr-3">
+                        <FormControl sx={{ minWidth: 140 }} size="small">
+                            <InputLabel id="demo-select-small-label">Status Stok</InputLabel>
+                            <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={statusStok}
+                                label="Age"
+                                onChange={handleChangeStok}
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={"true"}>Stok Habis</MenuItem>
+                                <MenuItem value={""}>Semua Stok</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
                 </div>
             </div>
 
@@ -246,9 +290,11 @@ const Page: React.FC = () => {
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Jual</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Beli</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Kadaluarsa</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Status Kadaluarsa</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Penerbit</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Uploader</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell>
                         </TableRow>
@@ -261,8 +307,10 @@ const Page: React.FC = () => {
                                 <TableCell>{item.kategori.nama}</TableCell>
                                 <TableCell>{item.stok}</TableCell>
                                 <TableCell>{item.harga}</TableCell>
+                                <TableCell>{item.harga_beli}</TableCell>
                                 <TableCell>{formattedDate(item.tanggal_kadaluarsa)}</TableCell>
                                 <TableCell>{item.status_kadaluarsa}</TableCell>
+                                <TableCell>{item.kategori.penerbit}</TableCell>
                                 <TableCell>{item.user.name} | {item.user.role}</TableCell>
                                 <TableCell>
                                     <div className='flex flex-row justify-center'>
