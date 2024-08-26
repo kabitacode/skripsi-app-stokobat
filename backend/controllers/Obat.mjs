@@ -48,7 +48,7 @@ export const getObatById = async (req, res) => {
 }
 
 export const createObat = async (req, res) => {
-    const { nama_obat, stok, harga, tanggal_kadaluarsa, id_kategori } = req.body;
+    const { nama_obat, stok, harga, tanggal_kadaluarsa, harga_beli, id_kategori, id_penerbit } = req.body;
     const user_id = req.userId;
     try {
         const today = new Date().toISOString().split('T')[0];
@@ -61,9 +61,11 @@ export const createObat = async (req, res) => {
             nama_obat,
             stok,
             harga,
+            harga_beli,
             tanggal_kadaluarsa,
             status_kadaluarsa,
             id_kategori,
+            id_penerbit,
             user_id
         });
         res.status(201).json({
@@ -77,7 +79,7 @@ export const createObat = async (req, res) => {
 }
 
 export const updateObat = async (req, res) => {
-    const { nama_obat, stok, harga, tanggal_kadaluarsa, id_kategori } = req.body;
+    const { nama_obat, stok, harga, harga_beli, tanggal_kadaluarsa, id_kategori, id_penerbit } = req.body;
     const user_id = req.userId;
     try {
         const today = new Date().toISOString().split('T')[0];
@@ -97,9 +99,11 @@ export const updateObat = async (req, res) => {
             nama_obat: nama_obat,
             stok: stok,
             harga: harga,
+            harga_beli: harga_beli,
             tanggal_kadaluarsa: tanggal_kadaluarsa,
             status_kadaluarsa,
             id_kategori: id_kategori,
+            id_penerbit: id_penerbit,
             user_id: user_id
         }, {
             where: {
