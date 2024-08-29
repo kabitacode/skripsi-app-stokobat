@@ -79,7 +79,8 @@ const Page: React.FC = () => {
     };
 
     const filteredData = data.filter(item =>
-        item.nama.toLowerCase().includes(searchQuery.toLowerCase())
+        item.nama.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.penerbit.toLowerCase().includes(searchQuery.toLowerCase()) 
     );
 
     return (

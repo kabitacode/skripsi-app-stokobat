@@ -9,7 +9,7 @@ import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Alert, AlertTitle, IconButton } from '@mui/material';
-import { AccountBox, Category, Home, Logout, Medication, Report, Storefront } from '@mui/icons-material';
+import { AccountBox, ArrowDropDown, ArrowRight, Category, ChevronRight, Home, Logout, MedicalInformation, MedicalServices, Medication, Report, Storefront, StoreMallDirectory } from '@mui/icons-material';
 import { StyledMenu } from '@/components';
 import { logout } from '@/services';
 import useStore from '@/store/useStore'
@@ -24,6 +24,7 @@ export default function DashboardLayout({ children }: any) {
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
    const open = Boolean(anchorEl);
+   const [isSubMenu, setIsSubMenu] = useState(false);
    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
       setAnchorEl(event.currentTarget);
    };
@@ -143,12 +144,49 @@ export default function DashboardLayout({ children }: any) {
                         <span className={`py-1 ${activeLink === '/penjualan' || activeLink === '/penjualan/add' ? 'text-white ml-3' : 'ml-3'}`}>Transaksi Penjualan</span>
                      </Link>
                   </li>
-                  <li className={`py-1 ${activeLink === '/laporan' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
-                     <Link href="/laporan" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
-                        <Report sx={{ color: activeLink === '/laporan' ? 'white' : 'black' }} fontSize='small' />
-                        <span className={`py-1 ${activeLink === '/laporan' ? 'text-white ml-3' : 'ml-3'}`}>Laporan</span>
-                     </Link>
+                  <li onClick={() => setIsSubMenu(!isSubMenu)} className={`py-1 ${activeLink === '/laporan' || activeLink === '/laporan/laporan-kadaluarsa' || activeLink === '/laporan/laporan-mendekati' || activeLink === '/laporan/laporan-penjualan' ? 'bg-blue-700 text-white' : 'bg-white text-gray-700'}`}>
+                     <div className="flex justify-between items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                        <div className='flex items-center'>
+                           <Report sx={{ color: activeLink === '/laporan' || activeLink === '/laporan/laporan-kadaluarsa' || activeLink === '/laporan/laporan-mendekati' || activeLink === '/laporan/laporan-penjualan'? 'white' : 'black' }} fontSize='small' />
+                           <span className={`py-1 ${activeLink === '/laporan' || activeLink === '/laporan/laporan-kadaluarsa' || activeLink === '/laporan/laporan-mendekati' || activeLink === '/laporan/laporan-penjualan' ? 'text-white ml-3' : 'ml-3'}`}>Laporan</span>
+                        </div>
+                        {
+                           isSubMenu ? <ArrowDropDown sx={{ color: 'white' }} fontSize='large' /> : <ArrowRight sx={{ color: 'white' }} fontSize='large' />
+                        }
+                     </div>
                   </li>
+
+                  {
+                     isSubMenu ? (
+                        <div className=''>
+                           <li className={`py-1 ${activeLink === '/laporan' ? 'bg-blue-900 text-white' : 'bg-blue-700 text-white'}`}>
+                              <Link href="/laporan" className="flex items-center p-2 text-white rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                                 <MedicalInformation sx={{ color: activeLink === '/laporan' ? 'white' : 'black' }} fontSize='small' />
+                                 <span className={`py-1 ${activeLink === '/laporan' ? 'text-white ml-3' : 'ml-3'}`}>Laporan Obat</span>
+                              </Link>
+                           </li>
+                           <li className={`py-1 ${activeLink === '/laporan/laporan-kadaluarsa' ? 'bg-blue-900 text-white' : 'bg-blue-700 text-white'}`}>
+                              <Link href="/laporan/laporan-kadaluarsa" className="flex items-center p-2 text-white rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                                 <MedicalServices sx={{ color: activeLink === '/laporan/laporan-kadaluarsa' ? 'white' : 'black' }} fontSize='small' />
+                                 <span className={`py-1 ${activeLink === '/laporan/laporan-kadaluarsa' ? 'text-white ml-3' : 'ml-3'}`}>Laporan Kadaluarsa</span>
+                              </Link>
+                           </li>
+                           <li className={`py-1 ${activeLink === '/laporan/laporan-mendekati' ? 'bg-blue-900 text-white' : 'bg-blue-700 text-white'}`}>
+                              <Link href="/laporan/laporan-mendekati" className="flex items-center p-2 text-white rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                                 <Medication sx={{ color: activeLink === '/laporan/laporan-mendekati' ? 'white' : 'black' }} fontSize='small' />
+                                 <span className={`py-1 ${activeLink === '/laporan/laporan-mendekati' ? 'text-white ml-3' : 'ml-3'}`}>Laporan Mendekati Kadaluarsa</span>
+                              </Link>
+                           </li>
+                           <li className={`py-1 ${activeLink === '/laporan/laporan-penjualan' ? 'bg-blue-900 text-white' : 'bg-blue-700 text-white'}`}>
+                              <Link href="/laporan/laporan-penjualan" className="flex items-center p-2 text-white rounded-lg dark:text-white  dark:hover:bg-gray-700">
+                                 <StoreMallDirectory sx={{ color: activeLink === '/laporan/laporan-penjualan' ? 'white' : 'black' }} fontSize='small' />
+                                 <span className={`py-1 ${activeLink === '/laporan/laporan-penjualan' ? 'text-white ml-3' : 'ml-3'}`}>Laporan Penjualan</span>
+                              </Link>
+                           </li>
+                        </div>
+                     ) : null
+                  }
+
 
                </ul>
             </div>

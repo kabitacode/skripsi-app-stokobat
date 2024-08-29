@@ -259,7 +259,7 @@ const Page: React.FC = () => {
                     </div>
                 </div>
                 <div>
-                    <h4 className="text-lg font-semibold mb-3">Filter By Empty Stok</h4>
+                    <h4 className="text-lg font-semibold mb-3">Filter By Stok</h4>
                     <div className="mr-3">
                         <FormControl sx={{ minWidth: 140 }} size="small">
                             <InputLabel id="demo-select-small-label">Status Stok</InputLabel>

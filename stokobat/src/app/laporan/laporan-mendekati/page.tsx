@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import DashboardLayout from "../dashboard/layout";
+import DashboardLayout from "../../dashboard/layout";
 import Link from 'next/link';
 import { Add, ArrowDropDownCircle, Delete, Download, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
@@ -125,7 +125,7 @@ const Page: React.FC = () => {
 
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
                 <div className='flex flex-row items-center justify-center'>
-                    <h1 className="text-2xl font-semibold">{isLaporan}</h1>
+                    <h1 className="text-2xl font-semibold">Laporan Mendekati Kadaluarsa</h1>
                     {/* <div className="">
                         <IconButton
                             id="demo-customized-button"
@@ -215,16 +215,15 @@ const Page: React.FC = () => {
                     </div>
                 </div>
 
-            {
-                isLaporanKey == "Laporan" &&
+
                 <div className='mx-5'>
                     <Table>
                         <TableHead className='bg-blue-700'>
                             <TableRow>
                                 <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
                                 <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Penerbit</TableCell>
                                 <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
+                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Penerbit</TableCell>
                                 <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
                                 <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Jual</TableCell>
                                 <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Beli</TableCell>
@@ -233,12 +232,12 @@ const Page: React.FC = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                            {dataMendekatiKadaluarsa.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
                                 <TableRow key={item.id}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{item.nama_obat}</TableCell>
-                                    <TableCell>{item.penerbit}</TableCell>
                                     <TableCell>{item.kategori}</TableCell>
+                                    <TableCell>{item.penerbit}</TableCell>
                                     <TableCell>{item.stok}</TableCell>
                                     <TableCell>{item.harga}</TableCell>
                                     <TableCell>{item.harga_beli}</TableCell>
@@ -258,8 +257,6 @@ const Page: React.FC = () => {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 </div>
-            }
-
            
 
 

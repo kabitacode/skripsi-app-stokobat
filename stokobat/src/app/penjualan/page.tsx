@@ -11,6 +11,10 @@ import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField } from '@mui/material';
 import { toast } from 'react-hot-toast';
 import dayjs, { Dayjs } from 'dayjs';
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 interface dataResponse {
     message: string
 }
@@ -24,7 +28,8 @@ const Page: React.FC = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState<string>('');
-
+    const [start_date, setStartDate] = useState<Dayjs | null>(dayjs());
+    const [end_date, setEndDate] = useState<Dayjs | null>(dayjs());
 
     const fetchData = async () => {
         if (!user || !user.token) return;
@@ -32,6 +37,7 @@ const Page: React.FC = () => {
         try {
             const apiData = await fetchPenjualan(user?.token);
             setData(apiData.data);
+            console.log(apiData);
             
 
             setLoading(false);
@@ -117,15 +123,43 @@ const Page: React.FC = () => {
                 />
             </div>
 
+            <div className='ml-5 mb-5'>
+                <h4 className="text-lg font-semibold mb-3">Filter By Tanggal</h4>
+                <div className="flex flex-row items-center">
+                    <div className='mr-3'>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Tanggal Mulai"
+                                value={start_date}
+                                onChange={(newValue) => setStartDate(newValue)}
+                            />
+                        </LocalizationProvider>
+                    </div>
+
+                    <div className='mr-3'>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Tanggal Selesai"
+                                value={end_date}
+                                onChange={(newValue) => setEndDate(newValue)}
+                            />
+                        </LocalizationProvider>
+                    </div>
+                    <Button variant="contained" sx={{ height: 40 }} onClick={() => {}}>Filter</Button>
+                </div>
+            </div>
+
             <div className='mx-5'>
                 <Table>
                     <TableHead className='bg-blue-700'>
                         <TableRow>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga (pcs)</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Jumlah</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Total Harga</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Transaksi</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
                             {/* <TableCell sx={{ color: 'white', fontWeight: '600', textAlign: 'center' }}>Action</TableCell> */}
                         </TableRow>
                     </TableHead>
@@ -134,9 +168,11 @@ const Page: React.FC = () => {
                             <TableRow key={item.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{item.obat.nama_obat}</TableCell>
+                                <TableCell>{item.obat.harga}</TableCell>
                                 <TableCell>{item.jumlah}</TableCell>
                                 <TableCell>{item.total_harga}</TableCell>
                                 <TableCell>{formattedDate(item.tanggal_transaksi)}</TableCell>
+                                <TableCell>{item.obat.kategori.nama}</TableCell>
                                 {/* <TableCell>
                                     <div className='flex flex-row justify-center'>
                                         <div className='mr-2'>

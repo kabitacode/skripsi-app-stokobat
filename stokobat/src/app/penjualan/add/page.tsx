@@ -294,8 +294,10 @@ const Page: React.FC<FormData> = () => {
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Penerbit</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
-                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Jual</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Beli</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Kadaluarsa</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Status Kadaluarsa</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: '600' }}>Uploader</TableCell>
@@ -307,8 +309,10 @@ const Page: React.FC<FormData> = () => {
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{item.nama_obat}</TableCell>
                                 <TableCell>{item.kategori.nama}</TableCell>
+                                <TableCell>{item.kategori.penerbit}</TableCell>
                                 <TableCell>{item.stok}</TableCell>
                                 <TableCell>{item.harga}</TableCell>
+                                <TableCell>{item.harga_beli}</TableCell>
                                 <TableCell>{formattedDate(item.tanggal_kadaluarsa)}</TableCell>
                                 <TableCell>{item.status_kadaluarsa}</TableCell>
                                 <TableCell>{item.user.name} | {item.user.role}</TableCell>

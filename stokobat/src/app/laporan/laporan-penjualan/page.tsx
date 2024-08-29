@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import DashboardLayout from "../dashboard/layout";
+import DashboardLayout from "../../dashboard/layout";
 import Link from 'next/link';
 import { Add, ArrowDropDownCircle, Delete, Download, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
@@ -125,7 +125,7 @@ const Page: React.FC = () => {
 
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
                 <div className='flex flex-row items-center justify-center'>
-                    <h1 className="text-2xl font-semibold">{isLaporan}</h1>
+                    <h1 className="text-2xl font-semibold">Laporan Penjualan</h1>
                     {/* <div className="">
                         <IconButton
                             id="demo-customized-button"
@@ -215,55 +215,46 @@ const Page: React.FC = () => {
                     </div>
                 </div>
 
-            {
-                isLaporanKey == "Laporan" &&
-                <div className='mx-5'>
-                    <Table>
-                        <TableHead className='bg-blue-700'>
-                            <TableRow>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Penerbit</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Jual</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Beli</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Kadaluarsa</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Status Kadaluarsa</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{item.nama_obat}</TableCell>
-                                    <TableCell>{item.penerbit}</TableCell>
-                                    <TableCell>{item.kategori}</TableCell>
-                                    <TableCell>{item.stok}</TableCell>
-                                    <TableCell>{item.harga}</TableCell>
-                                    <TableCell>{item.harga_beli}</TableCell>
-                                    <TableCell>{formattedDate(item.tanggal_kadaluarsa)}</TableCell>
-                                    <TableCell>{item.status_kadaluarsa}</TableCell>
+            
+
+                    <div className='mx-5'>
+                        <Table>
+                            <TableHead className='bg-blue-700'>
+                                <TableRow>
+                                    <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Obat (pcs)</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: '600' }}>Jumlah</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: '600' }}>Total Harga</TableCell>
+                                    <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Transaksi</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={data.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </div>
-            }
-
+                            </TableHead>
+                            <TableBody>
+                                {dataPenjualan.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                                    <TableRow key={item.id}>
+                                        <TableCell>{index + 1}</TableCell>
+                                        <TableCell>{item.nama_obat}</TableCell>
+                                        <TableCell>{item.stok}</TableCell>
+                                        <TableCell>{item.harga_obat}</TableCell>
+                                        <TableCell>{item.jumlah}</TableCell>
+                                        <TableCell>{item.total_harga}</TableCell>
+                                        <TableCell>{formattedDate(item.tanggal_transaksi)}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={data.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </div>
            
-
-
-
         </DashboardLayout>
     )
 }
