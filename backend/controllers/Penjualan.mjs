@@ -151,9 +151,13 @@ export const getPenjualan = async (req, res) => {
         const penjualan = await PenjualanModel.findAll({
             include: [{
                 model: ObatModel,
-                attributes: ['nama_obat', 'stok', 'harga', 'tanggal_kadaluarsa']
+                include: {
+                    model: KategoriModel
+                }
             }]
         });
+        
+        
         res.status(200).json({
             status: 200,
             message: "success",

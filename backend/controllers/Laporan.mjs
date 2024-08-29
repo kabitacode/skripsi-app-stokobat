@@ -222,7 +222,9 @@ export const getData = async (req, res) => {
             'nama_obat': obat.nama_obat,
             'stok': obat.stok,
             'kategori': obat.kategori.nama,
+            'penerbit': obat.kategori.penerbit,
             'harga': obat.harga,
+            'harga_beli': obat.harga_beli,
             'status_kadaluarsa': obat.status_kadaluarsa,
             'tanggal_kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
         }));
@@ -231,7 +233,9 @@ export const getData = async (req, res) => {
             'nama_obat': obat.nama_obat,
             'stok': obat.stok,
             'kategori': obat.kategori.nama,
+            'penerbit': obat.kategori.penerbit,
             'harga': obat.harga,
+            'harga_beli': obat.harga_beli,
             'status_kadaluarsa': obat.status_kadaluarsa,
             'tanggal_kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
         }));
@@ -241,7 +245,9 @@ export const getData = async (req, res) => {
             'nama_obat': obat.nama_obat,
             'stok': obat.stok,
             'kategori': obat.kategori.nama,
+            'penerbit': obat.kategori.penerbit,
             'harga': obat.harga,
+            'harga_beli': obat.harga_beli,
             'status_kadaluarsa': obat.status_kadaluarsa,
             'tanggal_kadaluarsa': new Date(obat.tanggal_kadaluarsa).toISOString().split('T')[0]
         }));
