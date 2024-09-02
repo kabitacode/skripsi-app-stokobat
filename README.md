@@ -1,5 +1,6 @@
 # skripsi-app-stokobat
 
-## Node Version :
-#### Next.JS => 20
-#### Express => 18
+## Version :
+### Node => 18^
+#### Next.JS => 14.2.4
+#### Express => 4.19.2
