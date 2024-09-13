@@ -89,3 +89,47 @@ export const fetchFilterObatKadaluarsa = async (token: string, start_date: any, 
     throw error;
   }
 };
+
+
+export const fetchFilterObatKadaluarsaByEmptyStok = async (token: string) => {
+  try {
+    const response = await api.get(`/laporan-kadaluarsa/filter-stok`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const fetchFilterObatMendekatiKadaluarsa = async (token: string, start_date: any, end_date: any) => {
+  try {
+    const response = await api.get(`/laporan-mendekati-kadaluarsa/filter?start_date=${start_date}&end_date=${end_date}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchFilterObatMendekatiByEmptyStok = async (token: string) => {
+  try {
+    const response = await api.get(`/laporan-kadaluarsa/filter-stok`, {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
