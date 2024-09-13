@@ -6,7 +6,7 @@ import DashboardLayout from "../dashboard/layout";
 import Link from 'next/link';
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchPenjualan, fetchPenjualanDelete } from '@/services';
+import { fetchPenjualan, fetchPenjualanDelete, fetchPenjualanFilter } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField } from '@mui/material';
 import { toast } from 'react-hot-toast';
@@ -37,11 +37,26 @@ const Page: React.FC = () => {
         try {
             const apiData = await fetchPenjualan(user?.token);
             setData(apiData.data);
-            console.log(apiData);
-            
 
             setLoading(false);
 
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFilter = async () => {
+        setLoading(true)
+        if (!user || !user.token) return;
+        try {
+            const tanggalMulai = start_date?.format('YYYY-MM-DD')
+            const tanggalSelesai = end_date?.format('YYYY-MM-DD')
+            const response = await fetchPenjualanFilter(user?.token, tanggalMulai, tanggalSelesai)
+            setData(response.data);
+            toast.success(response.message || "Success!");
+            setLoading(false)
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
         } finally {
@@ -63,20 +78,20 @@ const Page: React.FC = () => {
     };
 
 
-    const handleDelete = async (id: string) => {
-        if (!user || !user.token) return;
+    // const handleDelete = async (id: string) => {
+    //     if (!user || !user.token) return;
 
-        try {
-            const apiData = await fetchPenjualanDelete(user?.token, id);
-            toast.success(apiData.message || "Data berhasil Dihapus!");
-            fetchData();
-            setLoading(false);
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+    //     try {
+    //         const apiData = await fetchPenjualanDelete(user?.token, id);
+    //         toast.success(apiData.message || "Data berhasil Dihapus!");
+    //         fetchData();
+    //         setLoading(false);
+    //     } catch (error: any) {
+    //         toast.error(error.response?.data?.message || error.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
@@ -145,7 +160,7 @@ const Page: React.FC = () => {
                             />
                         </LocalizationProvider>
                     </div>
-                    <Button variant="contained" sx={{ height: 40 }} onClick={() => {}}>Filter</Button>
+                    <Button variant="contained" sx={{ height: 40 }} onClick={() => getFilter()}>Filter</Button>
                 </div>
             </div>
 
