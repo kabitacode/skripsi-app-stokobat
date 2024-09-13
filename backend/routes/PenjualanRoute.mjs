@@ -6,7 +6,8 @@ import {
     deletePenjualan,
     getPenjualanById, 
     updatePenjualan,
-    getPenjualanFiltered
+    getPenjualanFiltered,
+    getPenjualanByStok
 } from '../controllers/Penjualan.mjs'
 
 const router = express.Router();
@@ -14,6 +15,7 @@ import { verifyUser } from "../middleware/AuthUser.mjs";
 
 router.get('/api/penjualan', verifyUser, getPenjualan);
 router.get('/api/penjualan/filter', verifyUser, getPenjualanFiltered);
+router.get('/api/penjualan/filter-stok', verifyUser, getPenjualanByStok);
 router.get('/api/penjualan/:id', verifyUser, getPenjualanById);
 router.post('/api/penjualan', verifyUser, createPenjualan);
 router.delete('/api/penjualan/:id', verifyUser, deletePenjualan);
