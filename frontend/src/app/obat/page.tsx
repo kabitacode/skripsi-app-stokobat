@@ -95,7 +95,6 @@ const Page: React.FC = () => {
             const tanggalMulai = start_date?.format('YYYY-MM-DD')
             const tanggalSelesai = end_date?.format('YYYY-MM-DD')
             const response = await fetchFilterObat(user?.token, tanggalMulai, tanggalSelesai)
-            console.log(response);
             setData(response.data);
             toast.success(response.message || "Success!");
         } catch (error: any) {
@@ -110,7 +109,6 @@ const Page: React.FC = () => {
         if (!user || !user.token) return;
         try {
             const response = await fetchFilterObatByStatus(user?.token, param)
-            console.log('response', response);
             setData(response.data);
             toast.success(response.message || "Success!");
         } catch (error: any) {
@@ -125,7 +123,6 @@ const Page: React.FC = () => {
         if (!user || !user.token) return;
         try {
             const response = await fetchFilterObatByEmptyStok(user?.token, param)
-            console.log('response', response);
             setData(response.data);
             toast.success(response.message || "Success!");
         } catch (error: any) {
