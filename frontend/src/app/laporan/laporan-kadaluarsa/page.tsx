@@ -6,7 +6,7 @@ import DashboardLayout from "../../dashboard/layout";
 import Link from 'next/link';
 import { Add, ArrowDropDownCircle, Delete, Download, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchDataLaporan, fetchFilterObatKadaluarsa, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanObat, fetchLaporanPenjualan, fetchObat, fetchObatDelete } from '@/services';
+import { fetchDataLaporan, fetchFilterObatKadaluarsa, fetchFilterObatKadaluarsaByEmptyStok, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanObat, fetchLaporanPenjualan, fetchObat, fetchObatDelete } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField, Menu, Fade, IconButton } from '@mui/material';
 import { toast } from 'react-hot-toast';
@@ -37,8 +37,7 @@ const Page: React.FC = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchQuery, setSearchQuery] = useState<string>('');
-    const [isLaporanKey, setIsLaporanKey] = useState<string>('Laporan');
-    const [isLaporan, setIsLaporan] = useState<string>('Laporan Obat');
+
 
     const [start_date, setStartDate] = useState<Dayjs | null>(dayjs());
     const [end_date, setEndDate] = useState<Dayjs | null>(dayjs());
@@ -77,8 +76,22 @@ const Page: React.FC = () => {
             const tanggalSelesai = end_date?.format('YYYY-MM-DD')
             const response = await fetchFilterObatKadaluarsa(user?.token, tanggalMulai, tanggalSelesai)
             setDataKadaluarsa(response.data);
-            
-            
+
+
+            toast.success(response.message || "Success!");
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getFilterByEmptyStok = async (param: any) => {
+        setLoading(true)
+        if (!user || !user.token) return;
+        try {
+            const response = await fetchFilterObatKadaluarsaByEmptyStok(user?.token)
+            setDataKadaluarsa(response.data);
             toast.success(response.message || "Success!");
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
@@ -105,18 +118,9 @@ const Page: React.FC = () => {
         if (!user || !user.token) return;
 
         try {
-            let apiData;
 
-            if (isLaporanKey == "Penjualan") {
-                apiData = await fetchLaporanPenjualan(user?.token);
-            } else if (isLaporanKey == "Mendekati") {
-                apiData = await fetchLaporanMendekatiKadaluarsa(user?.token);
-            } else if (isLaporanKey == "Kadaluarsa") {
-                apiData = await fetchLaporanKadaluarsa(user?.token);
-            } else {
-                apiData = await fetchLaporanObat(user?.token);
-            }
-            
+            let apiData = await fetchLaporanKadaluarsa(user?.token);
+
             toast.success(apiData.message || "Data berhasil Didownload!");
             fetchData();
             setLoading(false);
@@ -134,6 +138,11 @@ const Page: React.FC = () => {
 
     const formattedDate = (dateString: string) => {
         return dayjs(dateString).format('DD MMMM YYYY');
+    };
+
+    const handleChangeStok = (event: SelectChangeEvent) => {
+        setStatusStok(event.target.value);
+        getFilterByEmptyStok(event.target.value)
     };
 
     return (
@@ -181,71 +190,71 @@ const Page: React.FC = () => {
             </div>
 
             <div className='ml-5 mb-5'>
-                    <h4 className="text-lg font-semibold mb-3">Filter By Stok</h4>
-                    <div className="mr-3">
-                        <FormControl sx={{ minWidth: 140 }} size="small">
-                            <InputLabel id="demo-select-small-label">Status Stok</InputLabel>
-                            <Select
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={""}
-                                label="Age"
-                                onChange={() => {}}
-                            >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={"true"}>Stok Habis</MenuItem>
-                                <MenuItem value={""}>Semua Stok</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </div>
+                <h4 className="text-lg font-semibold mb-3">Filter By Stok</h4>
+                <div className="mr-3">
+                    <FormControl sx={{ minWidth: 140 }} size="small">
+                        <InputLabel id="demo-select-small-label">Status Stok</InputLabel>
+                        <Select
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            value={statusStok}
+                            label="Age"
+                            onChange={handleChangeStok}
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={"true"}>Stok Habis</MenuItem>
+                            <MenuItem value={""}>Semua Stok</MenuItem>
+                        </Select>
+                    </FormControl>
                 </div>
+            </div>
 
-       
 
-                <div className='mx-5'>
-                    <Table>
-                        <TableHead className='bg-blue-700'>
-                            <TableRow>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Penerbit</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Jual</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Beli</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Kadaluarsa</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: '600' }}>Status Kadaluarsa</TableCell>
+
+            <div className='mx-5'>
+                <Table>
+                    <TableHead className='bg-blue-700'>
+                        <TableRow>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>No</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Nama Obat</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Kategori</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Penerbit</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Stok</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Jual</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Harga Beli</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Tanggal Kadaluarsa</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: '600' }}>Status Kadaluarsa</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {dataKadaluarsa.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
+                            <TableRow key={item.id}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{item.nama_obat}</TableCell>
+                                <TableCell>{item.kategori.nama ? item.kategori.nama : item.kategori}</TableCell>
+                                <TableCell>{item.kategori.penerbit ? item.kategori.penerbit : item.penerbit}</TableCell>
+                                <TableCell>{item.stok}</TableCell>
+                                <TableCell>{item.harga}</TableCell>
+                                <TableCell>{item.harga_beli}</TableCell>
+                                <TableCell>{formattedDate(item.tanggal_kadaluarsa)}</TableCell>
+                                <TableCell>{item.status_kadaluarsa}</TableCell>
                             </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {dataKadaluarsa.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item, index) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{item.nama_obat}</TableCell>
-                                    <TableCell>{item.kategori.nama ? item.kategori.nama : item.kategori}</TableCell>
-                                    <TableCell>{item.kategori.penerbit ? item.kategori.penerbit : item.penerbit}</TableCell>
-                                    <TableCell>{item.stok}</TableCell>
-                                    <TableCell>{item.harga}</TableCell>
-                                    <TableCell>{item.harga_beli}</TableCell>
-                                    <TableCell>{formattedDate(item.tanggal_kadaluarsa)}</TableCell>
-                                    <TableCell>{item.status_kadaluarsa}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={data.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </div>
-            
+                        ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[5, 10, 25]}
+                    component="div"
+                    count={data.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </div>
+
 
 
 
