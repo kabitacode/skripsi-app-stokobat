@@ -169,7 +169,12 @@ const Page: React.FC = () => {
 
     const handleChangeStok = (event: SelectChangeEvent) => {
         setStatusStok(event.target.value);
-        getFilterByEmptyStok(event.target.value)
+     
+        if (event.target.value == "true") {
+            getFilterByEmptyStok(event.target.value)
+        } else {
+            fetchData();
+        }
     };
 
     return (
