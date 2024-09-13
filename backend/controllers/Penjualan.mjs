@@ -195,45 +195,39 @@ export const deletePenjualan = async (req, res) => {
 
 export const getPenjualanFiltered = async (req, res) => {
     try {
-        const { start_date, end_date, bulan, tahun } = req.query;
+        const { start_date, end_date } = req.query;
 
+        // Buat objek where untuk menampung kondisi filter
         const whereCondition = {};
 
         if (start_date && end_date) {
-            // Jika start_date dan end_date disediakan, gunakan untuk memfilter rentang tanggal
             whereCondition.tanggal_transaksi = {
                 [Op.between]: [new Date(start_date), new Date(end_date)]
             };
-        } else if (bulan && tahun) {
-            // Jika hanya bulan dan tahun disediakan, gunakan untuk memfilter berdasarkan bulan dan tahun
-            whereCondition[Op.and] = [
-                Sequelize.where(Sequelize.fn('MONTH', Sequelize.col('tanggal_transaksi')), bulan),
-                Sequelize.where(Sequelize.fn('YEAR', Sequelize.col('tanggal_transaksi')), tahun)
-            ];
-        } else {
-            return res.status(400).json({ message: "Harap menyediakan start_date dan end_date, atau bulan dan tahun." });
         }
 
         // Query untuk mendapatkan data penjualan berdasarkan kondisi filter
-        const penjualan = await PenjualanModel.findAll({
-            where: whereCondition,
-            include: {
+        const filteredPenjualan = await PenjualanModel.findAll({
+            include: [{
                 model: ObatModel,
-                attributes: ['nama_obat']
-            }
+                include: {
+                    model: KategoriModel
+                }
+            }],
+            where: whereCondition
         });
 
-        if (penjualan.length === 0) {
+        if (filteredPenjualan.length === 0) {
             return res.status(404).json({
                 status: 404,
-                message: "Tidak ada data penjualan yang sesuai dengan filter."
+                message: "Tidak ada penjualan yang sesuai dengan filter."
             });
         }
 
         res.status(200).json({
             status: 200,
-            message: "Data penjualan berhasil ditemukan.",
-            data: penjualan
+            message: "Data Penjualan berhasil ditemukan.",
+            data: filteredPenjualan
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
