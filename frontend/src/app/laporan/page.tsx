@@ -54,8 +54,6 @@ const Page: React.FC = () => {
         try {
             const apiData = await fetchDataLaporan(user?.token);
             setData(apiData.data.laporan);
-          
-            console.log(apiData.data);
             
             setLoading(false);
         } catch (error: any) {

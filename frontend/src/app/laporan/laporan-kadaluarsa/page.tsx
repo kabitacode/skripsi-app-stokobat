@@ -6,7 +6,7 @@ import DashboardLayout from "../../dashboard/layout";
 import Link from 'next/link';
 import { Add, ArrowDropDownCircle, Delete, Download, Edit } from "@mui/icons-material";
 import { CustomButton, ButtonCustom } from "@/components";
-import { fetchDataLaporan, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanObat, fetchLaporanPenjualan, fetchObat, fetchObatDelete } from '@/services';
+import { fetchDataLaporan, fetchFilterObatKadaluarsa, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanObat, fetchLaporanPenjualan, fetchObat, fetchObatDelete } from '@/services';
 import useStore, { User } from '@/store/useStore'
 import { Table, TablePagination, TableHead, TableRow, TableCell, TableBody, CircularProgress, Button, Alert, AlertTitle, TextField, Menu, Fade, IconButton } from '@mui/material';
 import { toast } from 'react-hot-toast';
@@ -39,9 +39,12 @@ const Page: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [isLaporanKey, setIsLaporanKey] = useState<string>('Laporan');
     const [isLaporan, setIsLaporan] = useState<string>('Laporan Obat');
+
     const [start_date, setStartDate] = useState<Dayjs | null>(dayjs());
     const [end_date, setEndDate] = useState<Dayjs | null>(dayjs());
-    
+    const [status, setStatus] = React.useState('');
+    const [statusStok, setStatusStok] = React.useState('');
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -56,10 +59,7 @@ const Page: React.FC = () => {
 
         try {
             const apiData = await fetchDataLaporan(user?.token);
-            setData(apiData.data.laporan);
-            setDataMendekatiKadaluarsa(apiData.data.mendekatiKadaluarsa);
             setDataKadaluarsa(apiData.data.kadaluarsa);
-            setDataPenjualan(apiData.data.penjualan);
 
             setLoading(false);
         } catch (error: any) {
@@ -68,6 +68,25 @@ const Page: React.FC = () => {
             setLoading(false);
         }
     };
+
+    const getFilter = async () => {
+        setLoading(true)
+        if (!user || !user.token) return;
+        try {
+            const tanggalMulai = start_date?.format('YYYY-MM-DD')
+            const tanggalSelesai = end_date?.format('YYYY-MM-DD')
+            const response = await fetchFilterObatKadaluarsa(user?.token, tanggalMulai, tanggalSelesai)
+            setDataKadaluarsa(response.data);
+            
+            
+            toast.success(response.message || "Success!");
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     useEffect(() => {
         fetchData();
@@ -126,38 +145,6 @@ const Page: React.FC = () => {
             <div className="flex mt-4 mr-5 ml-5 mb-5 justify-between">
                 <div className='flex flex-row items-center justify-center'>
                     <h1 className="text-2xl font-semibold">Laporan Kadaluarsa</h1>
-                    {/* <div className="">
-                        <IconButton
-                            id="demo-customized-button"
-                            onClick={handleClick}>
-                            <ArrowDropDownCircle />
-                        </IconButton>
-
-                        <Menu
-                            id="fade-menu"
-                            MenuListProps={{
-                                'aria-labelledby': 'fade-button',
-                            }}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            TransitionComponent={Fade}
-                        >
-                            {
-                                dataMenuLaporan.map((item) => {
-                                    return (
-                                        <MenuItem onClick={() => {
-                                            handleClose()
-                                            setIsLaporan(item.title)
-                                            setIsLaporanKey(item.key)
-                                        }}>{item.title}</MenuItem>
-                                    )
-                                })
-                            }
-
-
-                        </Menu>
-                    </div> */}
                 </div>
 
                 <div className="">
@@ -189,7 +176,7 @@ const Page: React.FC = () => {
                             />
                         </LocalizationProvider>
                     </div>
-                    <Button variant="contained" sx={{ height: 40 }} onClick={() => {}}>Filter</Button>
+                    <Button variant="contained" sx={{ height: 40 }} onClick={() => getFilter()}>Filter</Button>
                 </div>
             </div>
 
@@ -237,8 +224,8 @@ const Page: React.FC = () => {
                                 <TableRow key={item.id}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>{item.nama_obat}</TableCell>
-                                    <TableCell>{item.kategori}</TableCell>
-                                    <TableCell>{item.penerbit}</TableCell>
+                                    <TableCell>{item.kategori.nama ? item.kategori.nama : item.kategori}</TableCell>
+                                    <TableCell>{item.kategori.penerbit ? item.kategori.penerbit : item.penerbit}</TableCell>
                                     <TableCell>{item.stok}</TableCell>
                                     <TableCell>{item.harga}</TableCell>
                                     <TableCell>{item.harga_beli}</TableCell>

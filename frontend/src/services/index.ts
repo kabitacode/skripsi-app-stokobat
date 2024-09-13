@@ -4,7 +4,7 @@ import {fetchKategori, fetchKategoriId, fetchKategoriAdd, fetchKategoriEdit, fet
 import {fetchDashboard} from '@/services/dashboard';
 import {fetchBatch, fetchBatchId, fetchBatchAdd, fetchBatchEdit, fetchBatchDelete} from '@/services/batch';
 import {fetchPenjualan, fetchPenjualanAdd, fetchPenjualanDelete, fetchPenjualanById, fetchPenjualanByKategori, fetchPenjualanFilter} from '@/services/penjualan';
-import {fetchLaporanObat, fetchDataLaporan, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanPenjualan} from '@/services/laporan';
+import {fetchLaporanObat, fetchDataLaporan, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanPenjualan, fetchFilterObatKadaluarsa} from '@/services/laporan';
 import {login, logout, fetchRegister} from '@/services/auth';
 import {api} from '@/services/api';
 
@@ -57,6 +57,7 @@ export {
     fetchDataLaporan,
     fetchLaporanKadaluarsa,
     fetchLaporanMendekatiKadaluarsa,
-    fetchLaporanPenjualan
+    fetchLaporanPenjualan,
+    fetchFilterObatKadaluarsa
 }
 
