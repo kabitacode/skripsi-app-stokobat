@@ -275,3 +275,42 @@ export const getData = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+
+export const getFilteredObatKadaluarsa = async (req, res) => {
+    try {
+        const { start_date, end_date } = req.query;
+
+        // Buat objek where untuk menampung kondisi filter
+        const whereCondition = {};
+
+        if (start_date && end_date) {
+            whereCondition.tanggal_kadaluarsa = {
+                [Op.between]: [new Date(start_date), new Date(end_date)]
+            },
+            whereCondition.status_kadaluarsa === "Kadaluarsa"
+        }
+
+        // Query untuk mendapatkan data obat berdasarkan kondisi filter
+        const filteredObat = await ObatModel.findAll({
+            include: KategoriModel,
+            where: whereCondition
+        });
+
+        if (filteredObat.length === 0) {
+            return res.status(404).json({
+                status: 404,
+                message: "Tidak ada obat yang sesuai dengan filter."
+            });
+        }
+        
+
+        res.status(200).json({
+            status: 200,
+            message: "Data obat berhasil ditemukan.",
+            data: filteredObat
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
