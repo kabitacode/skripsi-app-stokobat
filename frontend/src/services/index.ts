@@ -4,7 +4,7 @@ import {fetchKategori, fetchKategoriId, fetchKategoriAdd, fetchKategoriEdit, fet
 import {fetchDashboard} from '@/services/dashboard';
 import {fetchBatch, fetchBatchId, fetchBatchAdd, fetchBatchEdit, fetchBatchDelete} from '@/services/batch';
 import {fetchPenjualan, fetchPenjualanAdd, fetchPenjualanDelete, fetchPenjualanById, fetchPenjualanByKategori, fetchPenjualanFilter} from '@/services/penjualan';
-import {fetchLaporanObat, fetchDataLaporan, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanPenjualan, fetchFilterObatKadaluarsa, fetchFilterObatMendekatiKadaluarsa, fetchFilterObatKadaluarsaByEmptyStok, fetchFilterObatMendekatiByEmptyStok} from '@/services/laporan';
+import {fetchLaporanObat, fetchDataLaporan, fetchLaporanKadaluarsa, fetchLaporanMendekatiKadaluarsa, fetchLaporanPenjualan, fetchFilterObatKadaluarsa, fetchFilterObatMendekatiKadaluarsa, fetchFilterObatKadaluarsaByEmptyStok, fetchFilterObatMendekatiByEmptyStok, fetchFilterPenjualan, fetchFilterPenjualanByEmptyStok} from '@/services/laporan';
 import {login, logout, fetchRegister} from '@/services/auth';
 import {api} from '@/services/api';
 
@@ -61,6 +61,8 @@ export {
     fetchFilterObatKadaluarsa,
     fetchFilterObatMendekatiKadaluarsa,
     fetchFilterObatKadaluarsaByEmptyStok,
-    fetchFilterObatMendekatiByEmptyStok
+    fetchFilterObatMendekatiByEmptyStok,
+    fetchFilterPenjualan,
+    fetchFilterPenjualanByEmptyStok
 }
 
