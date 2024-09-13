@@ -75,8 +75,6 @@ const Page: React.FC = () => {
             const tanggalSelesai = end_date?.format('YYYY-MM-DD')
             const response = await fetchFilterPenjualan(user?.token, tanggalMulai, tanggalSelesai)
             setDataPenjualan(response.data);
-
-
             toast.success(response.message || "Success!");
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);
@@ -91,8 +89,7 @@ const Page: React.FC = () => {
         try {
             const response = await fetchFilterPenjualanByEmptyStok(user?.token)
             setDataPenjualan(response.data);
-            console.log(response.data);
-
+        
             toast.success(response.message || "Success!");
         } catch (error: any) {
             toast.error(error.response?.data?.message || error.message);

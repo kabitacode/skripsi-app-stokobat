@@ -217,7 +217,18 @@ export const getPenjualanFiltered = async (req, res) => {
             where: whereCondition
         });
 
-        if (filteredPenjualan.length === 0) {
+
+        const result = filteredPenjualan.map((item) => ({
+            "nama_obat": item.obat.nama_obat,
+            "stok": item.obat.stok,
+            "harga_obat": item.obat.harga,
+            "jumlah": item.jumlah,
+            "total_harga": item.total_harga,
+            "tanggal_transaksi": item.tanggal_transaksi,
+        }))
+
+
+        if (result.length === 0) {
             return res.status(404).json({
                 status: 404,
                 message: "Tidak ada penjualan yang sesuai dengan filter."
@@ -227,7 +238,7 @@ export const getPenjualanFiltered = async (req, res) => {
         res.status(200).json({
             status: 200,
             message: "Data Penjualan berhasil ditemukan.",
-            data: filteredPenjualan
+            data: result
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
