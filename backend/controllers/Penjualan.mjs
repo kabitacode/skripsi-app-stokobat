@@ -243,14 +243,23 @@ export const getPenjualanByStok = async (req, res) => {
                 model: ObatModel,
                 include: {
                     model: KategoriModel
+                },
+                where: {
+                    stok: 0
                 }
-            }],
-            where: {
-                stok: 0
-            }
+            }]
         });
 
-        if (filteredPenjualan.length === 0) {
+        const result = filteredPenjualan.map((item) => ({
+            "nama_obat": item.obat.nama_obat,
+            "stok": item.obat.stok,
+            "harga_obat": item.obat.harga,
+            "jumlah": item.jumlah,
+            "total_harga": item.total_harga,
+            "tanggal_transaksi": item.tanggal_transaksi,
+        }))
+
+        if (result.length === 0) {
             return res.status(404).json({
                 status: 404,
                 message: "Tidak ada penjualan yang sesuai dengan filter."
@@ -260,7 +269,7 @@ export const getPenjualanByStok = async (req, res) => {
         res.status(200).json({
             status: 200,
             message: "Data penjualan berhasil ditemukan.",
-            data: filteredPenjualan
+            data: result
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
